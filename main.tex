@@ -12,16 +12,14 @@
 
 % to-do items:
 % ------------
-% - Blanton comment: Remove bolometry from sec 2, make a sec 3 about the meaning of the transmission function, discuss bolometer in there.
-% - Is there a notation issue that we have $R(\lambda)$ but there are many different bandpasses? YES WE NEED TO SUBSCRIPT R(\lambda). Maybe check kcorrect paper for a position on notation.
 % - Who is the audience? Theorist vs observer / and also / physicist vs astronomer.
 % - Make sure this paper (and the cheat sheet) contains the classic equations like m = M + DM + K and m = m_bol + BC, etc. And make sure the signs are right!
-% - Should we always subscript R() with (say) b? So there is always a defined "band" b?
 % - Maybe talk about intensity very early on?
 %.- Be sure to talk about the absurdity of putting a galaxy at 10 pc!!
 % - Discuss differences between intensive and extensive quantities. Which are which, and where do they appear?
 % - Maybe mention and cite the Oke and Gunn work on calibrating Vega?? The blackbody source??
 % - Maybe cite Landolt and Aaronson and others on secondary standards?
+% - Work through Rix comments from 2022-02-09-ish (NYU email).
 
 % Aaron's things to work into the text:
 % -------------------------------------
@@ -140,7 +138,7 @@ This \documentname{} reinforces, repeats, and extends content we have written pr
 This is a purely pedagogical contribution.
 
 Given that observational astrophysics is technically sophisticated and extremely well equipped, why do we continue to use magnitude systems?
-HOGG: SUMMARIZE BLANTON POINTS HERE.
+HOGG: SUMMARIZE BLANTON POINTS HERE. SEE EMAIL.
 
 There is a constant tension in astronomy between the goal of measuring quantities that are simple and stable to calculate and theorize about, and measuring quantities that are simple and stable to observe.
 Theoretical simplicity and observational simplicity are desiderata in tension.
@@ -158,74 +156,51 @@ However, if you have interests in the history, there is at least one excellent b
 
 \section{Apparent magnitude}\label{sec:mag}
 
-A magnitude $m_R$ depends on a bandpass or transmission function $R(\lambda)$, the fundamental detector technology (photon counting or energy integrating), the flux density $f_\lambda(\lambda)$ of the target star, and the choice of standard star or standard flux density $f^{(0)}_\lambda(\lambda)$.
-Let's start with the transmission function.
-The transmission function $R(\lambda)$ is a function that varies between 0 and 1.
-It determines, at every wavelength $\lambda$ (or equivalently every frequency $\nu$) what fraction of the incident intensity at that wavelength (or frequency) is detected or recorded by the detector.
-Because the transmission is defined at every wavelength, it can be thought of as the fraction of the energy absorbed at that wavelength, or it can be thought of as the fraction of photons of that wavelength that are counted.
-The transmission function is dimensionless; how it is used depends on the kind of detector to which the function is applied.
-
-In detail all that matters in what follows is a total combined transmission function.
-However, in practice, the transmission function has contributions from multiple causes or elements in the optical path from the target star to the telescope.
-The most important contribution is usually the colored glass filter deliberately placed in the optical path of the light, but there are also important contributions to the transmission function from the atmosphere (which absorbs light of different wavelengths very differently) and from the detector hardware itself (which is usually at least slightly differently sensitive to photons of different wavelengths, and has some long-wavelength cutoff).
-There are also small (we hope) contributions from the telescope optical surfaces,
-and there are additional complexities arising from the fact that the atmosphere changes with time, and different observations are made through different atmospheric depths, but we will do no more than comment on these things below.
-In what follows, we will assume that the transmission function $R(\lambda)$ has been correctly computed, incorporating atmosphere, filter glass, and detector.
+An apparent magnitude $m_b$ of a star depends on a bandpass $b$ or a transmission function $R_b(\lambda)$, the flux density $f_\lambda(\lambda)$ of the star, and a choice of standard star or standard flux density $f^{(0)}_\lambda(\lambda)$.
+We'll say a lot more about the transmission function in \secref{sec:transmission};
+for now let's imagine that the transmission function $R_b(\lambda)$ is a function that varies between 0 and 1.
+It represents, at every wavelength $\lambda$ (or equivalently every frequency $\nu$) what fraction of the incident intensity at that wavelength (or frequency) incident \emph{on the top of the Earth's atmosphere} passes through the atmosphere and optical path and is detected or recorded by the detector.
+We'll complexify that definition a bit in \secref{sec:transmission}.
+In what follows, we will assume that the transmission function $R_b(\lambda)$ has been correctly estimated, incorporating atmosphere, optics, filter glass, and detector (all of which matter).
 
 The flux density $f_\lambda(\lambda)$ has units of energy per time per area per wavelength.
 It can be thought of as a luminosity density divided by an area, or it can be thought of as an intensity integrated over a solid angle.
 It is an \emph{apparent} property of the star in the sense that it depends not just on the intrinsic properties of the target star, but also the distance to the star, interstellar dust absorption, and so on.
-Because we have included the effect of the atmosphere in $R(\lambda)$ but not (say) the interstellar medium, the relevant flux density in what follows is the flux density from the star falling on the top of Earth's atmosphere.
+Because we have included the effect of the atmosphere in $R_b(\lambda)$ but not (say) the interstellar medium, the relevant flux density in what follows is the flux density from the star falling on the top of Earth's atmosphere.
+The target star has a flux density $f_\lambda(\lambda)$ and the standard star or source (to which it will be compared to create the magnitude) has a flux density $f^{(0)}_\lambda(\lambda)$.
 
-Armed with the transmission function $R(\lambda)$, the target-star flux density $f_\lambda(\lambda)$, and the standard-star flux density $f^{(0)}_\lambda(\lambda)$, the magnitude $m_R$ as measured by a photon-counting device (such as a CCD) is expected to be given by the following
+Armed with the transmission function $R_b(\lambda)$, the target-star flux density $f_\lambda(\lambda)$, and the standard-star flux density $f^{(0)}_\lambda(\lambda)$, the (asymptotically expected) magnitude $m_b$ as measured by a photon-counting device (such as a CCD) is given by the following
 \begin{align}
-    m_R &= -2.5\logten\frac{C_R}{C^{(0)}_R} \mbox{~~for photon-counting devices}\label{eq:mag}\\
-    C_R &= \int \frac{f_\lambda(\lambda)}{(h\,c/\lambda)}\,R(\lambda)\,\dd\lambda\label{eq:counts}\\
-    C^{(0)}_R &= \int \frac{f^{(0)}_\lambda(\lambda)}{(h\,c/\lambda)}\,R(\lambda)\,\dd\lambda ~,
+    m_b &= -2.5\logten\frac{C_b}{C^{(0)}_b}\label{eq:mag}\\
+    C_b &= \int \frac{f_\lambda(\lambda)}{(h\,c/\lambda)}\,R_b(\lambda)\,\dd\lambda\label{eq:counts}\\
+    C^{(0)}_b &= \int \frac{f^{(0)}_\lambda(\lambda)}{(h\,c/\lambda)}\,R_b(\lambda)\,\dd\lambda ~,
 \end{align}
-where $C_R$ and $C^{(0)}_R$ are numbers proportional to the expected photon counts detected per unit time in an exposure of the target star and of the standard star,
+where $C_b$ and $C^{(0)}_b$ are numbers proportional to the expected photon counts detected per unit time in an exposure of the target star and of the standard star,
 and the all-important factor of $h\,c/\lambda$ turns energy flux density into photon flux density.
 If you prefer to work in frequency units, you can use the flux density $f_\nu(\nu)$ that has units of energy per time per area per frequency, and the expected counts equations become
 \begin{align}
-    C_R &= \int \frac{f_\nu(\nu)}{h\,\nu}\,R(\nu)\,\dd\nu\\
-    C^{(0)}_R &= \int \frac{f^{(0)}_\nu(\nu)}{h\,\nu}\,R(\nu)\,\dd\nu ~,
+    C_b &= \int \frac{f_\nu(\nu)}{h\,\nu}\,R_b(\nu)\,\dd\nu\\
+    C^{(0)}_b &= \int \frac{f^{(0)}_\nu(\nu)}{h\,\nu}\,R_b(\nu)\,\dd\nu ~,
 \end{align}
 where now the factor of $h\,\nu$ turns energy flux density into photon flux density, but everything else is the same.
-The two different kinds of flux densities $f_\lambda(\lambda)$ and $f_\nu(\nu)$ and the two transmission functions $R(\lambda)$ and $R(\nu)$ are related by
+The two different kinds of flux densities $f_\lambda(\lambda)$ and $f_\nu(\nu)$ and the two transmission functions $R_b(\lambda)$ and $R_b(\nu)$ are related by
 \begin{align}
     \nu\,f_\nu(\nu) &= \lambda\,f_\lambda(\lambda) \mbox{~~s.t.~} \lambda = \frac{c}{\nu}\\
-    R(\nu) &= R(\lambda) \mbox{~~s.t.~} \lambda = \frac{c}{\nu} ~.
+    R_b(\nu) &= R_b(\lambda) \mbox{~~s.t.~} \lambda = \frac{c}{\nu} ~.
 \end{align}
-
-If you have old-school technology, or very new-school technology, or you work in the far infrared, you might conceivably have some kind of bolometer, or energy-integrating detector.
-In this case, \emph{you get a different magnitude} $m_{\widetilde{R}}$, as follows
-\begin{align}
-    m_{\widetilde{R}} &= -2.5\logten\frac{S_R}{S^{(0)}_R} \mbox{~~for bolometers}\\
-    S_R &= \int f_\lambda(\lambda)\,R(\lambda)\,\dd\lambda\\
-    S^{(0)}_R &= \int f^{(0)}_\lambda(\lambda)\,R(\lambda)\,\dd\lambda~,
-\end{align}
-where now $S_R$ and $S^{(0)}_R$ are numbers proportional to the bolometer signal detected in an exposure of some duration from the target star and the standard star,
-and we have inserted a tiny tilde into the symbol $m_{\widetilde{R}}$ because the integral is different.
-These expressions for $S_R$ and $S^{(0)}_R$ are integrated energies (or really energies per area per time), so they do not involve any factors of $h\,c/\lambda$.
-But very importantly to our message here, these two magnitudes \emph{are not the same}.
-That is,
-\begin{align}
-    -2.5\logten\frac{S_R}{S^{(0)}_R} = m_{\widetilde{R}} &\ne m_R = -2.5\logten\frac{C_R}{C^{(0)}_R} ~.
-\end{align}
-From here on, in this document, we will assume that your detector is of the photon-counting variety, not the energy-integrating variety.
-If that's not true, then substitute the $S_R$ expressions for the $C_R$ expressions---or whatever integrals correctly represent the physics of your detector.
 
 The important consequences of the magnitude definition \eqref{eq:mag} are as follows:
-If your target star is ``fainter'' than the standard source in the bandpass $R(\lambda)$---meaning that if it delivers a smaller signal in your device---then it will have a positive magnitude.
+If your target star is ``fainter'' than the standard source in the bandpass $R_b(\lambda)$---meaning that if it delivers a smaller signal in your device in this bandpass---then it will have a positive magnitude.
 The magnitude gets larger as the target star gets fainter.
 If the magnitude is zero (this situation is rare!), the target star is identical in apparent brightness to the standard star, given your device and bandpass.
 
-In classic astronomical parlance, the magnitude $m_R$ (or $m_{\widetilde{R}}$) can be called an \emph{apparent magnitude}, where the modifier ``apparent'' indicates that it is a purely observational quantity, observed at the Earth.
+In classic astronomical parlance, the magnitude $m_b$ can be called an \emph{apparent magnitude}, where the modifier ``apparent'' indicates that it is a purely observational quantity, observed at the Earth.
 The apparent magnitude has the simple property that it can be measured without additional assumptions, but it has the complex property that its theoretical prediction or understanding involves not just the physical (intrinsic) properties of the star; it also involves the distance to the star, interstellar reddening, and other effects, all of which will be discussed below.
+From an epistemological standpoint, the apparent magnitude is extremely fundamental, since it can be measured by taking ratios of signals measured in detector--telescope setups without many additional assumptions.
 
 At the risk of being extremely repetitive:
-The point of this definition \eqref{eq:mag} of the apparent magnitude is that it is very simple to very precisely measure the magnitude.
-The definition is given in terms of integrals of the spectrum $f_\lambda(\lambda)$ of the source, and the spectrum $f^{(0)}_\lambda(\lambda)$ of the standard star, and the transmission function $R(\lambda)$ of the bandpass.
+The point of this definition \eqref{eq:mag} of the apparent magnitude is that it is very simple to very precisely \emph{measure} the magnitude.
+The definition is given in terms of integrals of the spectrum $f_\lambda(\lambda)$ of the source, and the spectrum $f^{(0)}_\lambda(\lambda)$ of the standard star, and the transmission function $R_b(\lambda)$ of the bandpass.
 But---and this couldn't be more important---you don't need to \emph{know} any of these functions in order to measure the magnitude.
 Magnitudes existed when the only instruments observing the sky were human eyes, and knowledge of how the stars shine was considered a theoretical impossibility (and maybe also an affront to God).
 We'll say more about in-practice measurement of magnitudes in \secref{sec:practice}.
@@ -242,21 +217,62 @@ Full discussion of these issues are outside our scope here, but suffice it to sa
 
 \section{Transmission function}\label{sec:transmission}
 
-HOGG: Move everything about bolometers down here, and redefine $R(\lambda)$ to match Blanton's requirements.
+In detail all that matters to the magnitude system for band $b$ is the total combined transmission function $R(\lambda)$.
+However, in practice, the transmission function has contributions from multiple causes or elements in the optical path from the target star to the telescope.
+The most important contribution is usually the colored glass filter deliberately placed in the optical path of the light, but there are also important contributions to the transmission function from the atmosphere (which absorbs light of different wavelengths very differently) and from the detector hardware itself (which is usually at least slightly differently sensitive to photons of different wavelengths, and has some long-wavelength cutoff).
+There are also small (we hope) contributions from the telescope optical surfaces,
+and there are additional complexities arising from the fact that the atmosphere changes with time, and different observations are made through different atmospheric depths, but we will do no more than comment on these things below (\secref{sec:practice}).
+Symbolically, we can write the transmission function as a product of terms:
+\begin{align}
+    R_b(\lambda) &= R_\text{atmosphere}(\lambda)\,R_\text{optics}(\lambda)\,R_\text{filter}(\lambda)\,R_\text{detector}(\lambda)~,
+\end{align}
+where the atmosphere term depends on airmass and conditions, and the filter term is the only part that the observer directly controls.
 
-HOGG: Explicitly compose $R(\lambda)$ as a product of functions for atmosphere, filter, optics, and detector.
+The way that the transmission function $R(\lambda)$ is used above in \eqref{eq:counts} demonstrates, dimensionally,
+that the value of the function $R(\lambda)$ is the expected contribution of a \emph{photon} of wavelength
+$\lambda$ incident on the top of the atmosphere to the signal $C_b$ read out from the detector.
+If the detector is a photon-counting device, then the function $R(\lambda)$ varies between zero and unity, and it can
+be measured (in principle) by measuring relative intensities at different points in the optical path from outer space
+to the detector.
+However, if the detector is a bolometer or an energy-integrating device, the function $R(\lambda)$ has to be inferred
+with a bit more care; it involves an extra factor of $h\,c/\lambda$ to deliver, again, the expected contribution of
+a \emph{photon} of wavelength $\lambda$ to the signal read out by the detector.
 
-HOGG: Look up names in the engineering systems (Gaia, STScI, 2MASS, etc) for these functions and audit this document to agree or be consistent.
+That is, if you have old-school technology, or very new-school technology, or you work in the far infrared, you might conceivably have some kind of bolometer, or energy-integrating detector.
+In this case, you get a different expression for the apparent magnitude $m_b$, as follows
+\begin{align}
+    m_b &= -2.5\logten\frac{S_b}{S^{(0)}_b}\\
+    S_b &= \int f_\lambda(\lambda)\,S_b(\lambda)\,\dd\lambda\\
+    S^{(0)}_b &= \int f^{(0)}_\lambda(\lambda)\,S_b(\lambda)\,\dd\lambda~,
+\end{align}
+where now $S_b$ and $S^{(0)}_b$ are numbers proportional to the bolometer signal detected in an exposure of some duration from the target star and the standard star.
+These expressions for $S_b$ and $S^{(0)}_b$ are integrated energies (or really energies per area per time), so they do not involve any factors of $h\,c/\lambda$.
+But very importantly to our message here, if $R_b(\lambda)=S_b(\lambda)$, the photon-counting and bolometer magnitudes \emph{are not the same}!
+These two magnitudes the same \emph{if and only if}
+\begin{align}
+    R_b(\lambda) &= \frac{h\,c}{\lambda}\,S_b(\lambda)~.\label{eq:StoR}
+\end{align}
+From here on, in this document, we will assume that your detector is of the photon-counting variety, not the energy-integrating variety.
+But everything is completely technology-independent if \eqref{eq:StoR} holds.
+What isn't technology-independent is that if you have a piece of colored glass that is, say, your $V$-band filter glass, that you use on your photon-counting CCD imager, and you take it to your bolometer-equipped photometer, and you use that exact same piece of colored glass, you get a different $V$-band apparent magnitude, and solely because the photon-counting and energy-integrating devices do different integrals of the incident intensity.
 
-HOGG: Note that the same piece of glass on a CCD and on a bolometer give different bandpasses.
+One point worthy of note here, perhaps, is that if you measure the transmission of a piece of colored filter glass in the standard way---by comparing the intensity transmitted to the intensity incident---you obtain the multiplicative contribution of that filter glass to $R_b(\lambda)$, if you are going to put it in front of a photon detector.
+That is, since most imagers and photometers are photon-counting devices, in most cases when you are measuring a filter curve in a piece of glass, you are measuring a multiplicative contribution to $R_b(\lambda)$.
+However, if you are going to put that filter glass in front of a bolometer, what you measure is the multiplicative contribution of that filter glass to $S_b(\lambda)$.
 
-HOGG: Note that if you measure a piece of glass in the standard way, you get its multiplicative contribution to $R(\lambda)$, if you are going to put that piece of glass in front of a photon detector.
+There are multiple terms used for the transmission function $R_b(\lambda)$ in the literature.
+The NASA \textsl{Hubble Space Telescope} documentation calls the transmission function $R_b(\lambda)$ the ``integrated system throughput'' \cite{acs}.
+The ESA \textsl{Gaia} documentation calls it the ``transmission'' or ``response'' function \cite{jordi}.
+The \textsl{Sloan Digital Sky Survey} documentation calls it the ``response'' function \cite{doi}.
+Sometimes these projects also compute ``effective wavelengths'' for the bandpasses, but I don't think this is very useful, so I am putting it out of scope.\footnote{HOGG: Why are these not useful?}
 
-HOGG: But also note that this is true in fine detail for every different pixel of every device!
+One amusing aspect of the transmission function is that it involves a term that represents the sensitivity of the detector, and multi-pixel imaging detectors (like CCDs) are made up of millions of (at least slightly) heterogeneous pixels.
+That means that, technically, even when a well-defined filter is in place, every pixel of a real-world imaging system has a slightly different transmission function, and that the effective bandpass through which an apparent magnitude is measured is a (maybe very weak) function of position in the detector.
+That's interesting, but out of scope here.\footnote{HOGG: Say something about LSST filter costs.}
 
 \section{Color index}\label{sec:color}
 
-Much of astronomy is the study of star (or galaxy or quasar or supernova or \etc) spectra or spectral energy distributions.\footnote{HOGG: This is jargon; explain it.}
+Much of astronomy is the study of star (or galaxy or quasar or supernova or \etc) spectra or spectral energy distributions.\footnote{It is with apologies on behalf of my communities that I comment here that astronomers use the term ``spectral energy distribution'' to mean the spectrophotometrically calibrated flux density from a source as a function of wavelength or frequency, usually at low spectral resolution.}
 If you only have imaging devices at your disposal---which make photometric measurements---and not a spectrograph, then your spectral information comes from comparing the brightness of the object in different bandpasses, each of which has different wavelength coverage.
 And, if you accept the relative properties of the magnitude system (that is, that all measurements are made relative to a standard star) then the spectral information delivered by multi-band photometry is, fundamentally, information about \emph{differences in the amplitude and shape} between the spectrum of your target star and the spectrum of the standard star.
 
@@ -264,7 +280,7 @@ The classical optical bandpasses are maybe $U,B,V,R,I,J,H,K$ spanning from the u
 Sometimes people object to saying that $J, H, K$, which are in the near infrared, are ``optical'' bandpasses. But our position (inherited from Gerry Neugebauer, a founder of infrared astronomy), is that ``optical'' is the name of a set of techniques, while ``ultraviolet'', ``visible'', and ``infrared'' are electromagnetic wavelength ranges. So the Spitzer Space Telescope \cite{spitzer}, for example, was an optical instrument observing in the infrared.}
 There are lots of other bandpasses in use, and from space the wavelength range is enormously expanded from the far-ultraviolet through the mid-infrared.\footnote{%
 HOGG: I am prejudiced against gamma-ray, X-ray, and submillimeter here. Radio never used these definitions.}
-For each of these bandpasses, if you want to interpret theoretically the spectral information it provides, it is critical to have some estimate of the transmission function $R(\lambda)$, as we discussed in \secref{sec:mag}.
+For each of these bandpasses, if you want to interpret theoretically the spectral information it provides, it is critical to have some estimate of the transmission function $R_b(\lambda)$, as we discussed in \secref{sec:mag}.
 
 A color index---or more usually just a ``color'' these days---is a difference of two magnitudes, measured through two different bandpasses.
 Why a difference of two magnitudes?
@@ -292,14 +308,6 @@ The color gets larger as the target star gets redder (in this very specific sens
 If the color index is zero, the target star is consistent with being identical in spectral shape to the standard star, given your device and the chosen pair of bandpasses.
 If the color index is negative, the target star is bluer than the standard.
 
-% \section{Example: The \textsl{Gaia} bandpasses}\label{sec:gaia}
-
-% HOGG ASKS: Do we need a section that does these calculations explicitly with bandpasses and flux densities? It could be useful, but it also seems a bit like a distraction. Thoughts, people?
-
-% HOGG: Maybe show the $R(\lambda)$ functions for the three Gaia bands?
-
-% HOGG: Maybe show a few spectral models (a few should be blackbodies, then maybe matched realistic stellar spectra)?
-
 \section{Distance modulus and apparent magnitude}
 
 We have emphasized, above, that magnitudes and colors are \emph{apparent} properties of the star.
@@ -320,9 +328,9 @@ Our community has chosen the latter.
 In a Vega-relative photometric system, Vega has an apparent magnitude of zero (by definition), but an absolute magnitude slightly greater than zero (because it is closer to us than $10\,\pc$).}
 The absolute magnitude is a measure of the intrinsic luminosity of the target star (as opposed to the apparent brightness) because if all the stars were at the same distance from us (and unaffected by interstellar attenuation), their relative brightnesses would be in proportion to their intrinsic luminosities.
 
-An absolute magnitude $M_R$ is related to an apparent magnitude $m_R$ through a \emph{distance modulus} $DM$, which is a logarithmic measure of the distance to the star:\footnote{Note that the distance modulus is traditionally denoted by the two-letter symbol ``$DM$'' and is not in any sense a product of a $D$ times an $M$.}
+An absolute magnitude $M_b$ is related to an apparent magnitude $m_b$ through a \emph{distance modulus} $DM$, which is a logarithmic measure of the distance to the star:\footnote{Note that the distance modulus is traditionally denoted by the two-letter symbol ``$DM$'' and is not in any sense a product of a $D$ times an $M$.}
 \begin{align}
-    m_R &= M_R + DM\label{eq:absmag}\\
+    m_b &= M_b + DM\label{eq:absmag}\\
     DM &= 5\,\logten\frac{D}{(10\,\pc)}\label{eq:DM}\\
        &= -5\,\logten\frac{\varpi}{(0.1\,\arcsec)} ~,
 \end{align}
@@ -334,7 +342,7 @@ The distance-modulus expression \eqref{eq:DM} invoves a $+5$ and not a $-2.5$ be
 The consequences of these definitions are as follows:
 The distance modulus is measured in the same units as magnitudes, and it increases with distance.
 $DM=0$ at $D=10\,\pc$, and $DM=10$ at $D=1\,\kpc$ (for example).
-The absolute magnitude $M_R$ of the target star through a transmission function $R(\lambda)$ is near zero if its intrinsic luminosity is similar to the intrinsic luminosity of the standard star, as measured (in the case of photon-counting devices) by photon luminosity in the bandpass.
+The absolute magnitude $M_b$ of the target star through a transmission function $R_b(\lambda)$ is near zero if its intrinsic luminosity is similar to the intrinsic luminosity of the standard star, as measured (in the case of photon-counting devices) by photon luminosity in the bandpass.
 The absolute magnitude is positive if the target star---placed counterfactually at a distance of $10\,\pc$---would be fainter than the standard star, and negative if the target star would be brighter.
 
 One absurdity of cosmology is that absolute magnitudes are often used for cosmologically distant sources like quasars and galaxies, which could never be observed from a distance of $10\,\pc$---they are far, far larger in size than $10\,\pc$!
@@ -379,11 +387,11 @@ The absolute bolometric magnitude $M_\bol$ of a star of bolometric luminosity $L
 \end{align}
 where $L^{(0)}$ is the bolometric luminosity of the standard star.
 For comparison of data to theoretical models of stars, it is useful often to compare them in terms of their bolometric luminosities, or their absolute bolometric magnitudes.
-These are more theoretically interpretable than their absolute magnitudes $M_R$ in bandpass $R(\lambda)$.
-Thus it was natural for astronomers to define a bolometric correction $BC_R$ which converts between the two:
+These are more theoretically interpretable than their absolute magnitudes $M_b$ in bandpass $R_b(\lambda)$.
+Thus it was natural for astronomers to define a bolometric correction $BC_b$ which converts between the two:
 \begin{align}
-    M_R &= M_\bol - BC_R\label{eq:BC}\\
-    m_R &= M_\bol - BC_R + DM ~,
+    M_b &= M_\bol - BC_b\label{eq:BC}\\
+    m_b &= M_\bol - BC_b + DM ~,
 \end{align}
 where again we have assumed that interstellar attenuation is negligible.
 The sign of the bolometric correction was defined this way, which (in our humble opinion) is wrong,\footnote{All other corrections have the sign convention that the apparent magnitude is found by adding in the correction to the absolute quantity.} but it is set now.
@@ -398,7 +406,7 @@ If a star has a bolometric luminosity greater than the standard, it will have a 
 The bolometric correction is a bit harder to reason about.
 The bolometric correction can be positive or negative.
 If the stars are close to being black-bodies, the rough expectations are as follows:
-The target star will have a vanishing bolometric correction if the star has the same spectral shape as the standard star, or if the bandpass $R(\lambda)$ is beautifully and coincidentally centered on some (slightly hard to write down) natural wavelength related to the peaks in the spectral density coming from the target star and the standard star.
+The target star will have a vanishing bolometric correction if the star has the same spectral shape as the standard star, or if the bandpass $R_b(\lambda)$ is beautifully and coincidentally centered on some (slightly hard to write down) natural wavelength related to the peaks in the spectral density coming from the target star and the standard star.
 The target star will have a positive bolometric correction if it is redder (cooler) than the standard star and it is being observed through a bandpass that is centered on wavelengths longer than where the standard-star spectral density peaks.
 Alternatively, the target star can also have a positive bolometric correction if it is bluer (hotter) than the standard star and it is being observed through a bandpass that is centered on wavelengths shorter than where the standard-star spectral density peaks.
 The target star will have a negative bolometric correction in the other situations (hotter target and bandpass at longer wavelengths or cooler target and bandpass at shorter wavelengths).
@@ -432,24 +440,24 @@ a fraction of the light specified by some optical depth $\tau(\lambda)$, then th
 \end{align}
 where we have defined a function $A(\lambda)$ that is very similar to the optical depth but the factor of 1.086 converts from natural-log units to magnitude units (because $2.5\logten(e)=1.086$ HOGG IS THIS ARGUMENT CORRECT?).
 
-All this means that if the absolute bolometric magnitude of the target star is based on an integral of its spectral luminosity density $L_\lambda(\lambda)$, and the spectral flux density $f_\lambda(\lambda)$ at the top of the atmosphere depends on both the distance to the star and the interstellar attenuation, the relationship between apparent magnitude $m_R$ and absolute magnitude $M_R$ or absolute bolometric magnitude $M_\bol$ must be further complexified to
+All this means that if the absolute bolometric magnitude of the target star is based on an integral of its spectral luminosity density $L_\lambda(\lambda)$, and the spectral flux density $f_\lambda(\lambda)$ at the top of the atmosphere depends on both the distance to the star and the interstellar attenuation, the relationship between apparent magnitude $m_b$ and absolute magnitude $M_b$ or absolute bolometric magnitude $M_\bol$ must be further complexified to
 \begin{align}
-    m_R &= M_R + DM + A(R)\label{eq:mA}\\
-        &= M_\bol - BC_R + DM + A(R)\\
-    A(R) &= -2.5\,\logten\frac{\chi_R}{\chi_{RA}}\label{eq:A}\\
-    \chi_R &= \int \frac{L_\lambda(\lambda)}{h\,c/\lambda}\,R(\lambda)\,\dd\lambda\\
-    \chi_{RA} &= \int \frac{L_\lambda(\lambda)}{h\,c/\lambda}\,\exp(-\tau(\lambda))\,R(\lambda)\,\dd\lambda ~,
+    m_b &= M_b + DM + A(b)\label{eq:mA}\\
+        &= M_\bol - BC_b + DM + A(b)\\
+    A(b) &= -2.5\,\logten\frac{\chi_b}{\chi_{bA}}\label{eq:A}\\
+    \chi_b &= \int \frac{L_\lambda(\lambda)}{h\,c/\lambda}\,R_b(\lambda)\,\dd\lambda\\
+    \chi_{bA} &= \int \frac{L_\lambda(\lambda)}{h\,c/\lambda}\,\exp(-\tau(\lambda))\,R_b(\lambda)\,\dd\lambda ~,
     \end{align}
-where $A(R)\geq 0$ is the \emph{extinction}, or a magnitude-units quantity expressing the amount of interstellar dust attenuation,
-and $\chi_R,\chi_{RA}$ are hypothetical photon-counting signals you would get if you could photon-count the source with and without dust attenuation.
+where $A(b)\geq 0$ is the \emph{extinction}, or a magnitude-units quantity expressing the amount of interstellar dust attenuation,
+and $\chi_b,\chi_{bA}$ are hypothetical photon-counting signals you would get if you could photon-count the source with and without dust attenuation.
 Recall (from \secref{sec:mag}) that we are assuming that your device is a photon-counting device.
 We apologize that the notation for the infinitesimal-wavelength extinction $A(\lambda)$ is so similar to the finite-bandpass extinction $A(R)$, but it's not our fault.
 
 These relationships---\eqref{eq:mA} and \eqref{eq:A}---constitute a nice definition for the extinction $A(R)$, but it is worth noting that \emph{you need to know a lot of things} in order to compute it accurately:
-You need to know the intrinsic spectral density $L(\lambda)$ of the target star, you need to know the amplitude and detailed shaper of the attenuation law $\tau(\lambda)$ or $A(\lambda)$, and you need to know the bandpass transmission function $R(\lambda)$.
+You need to know the intrinsic spectral density $L(\lambda)$ of the target star, you need to know the amplitude and detailed shaper of the attenuation law $\tau(\lambda)$ or $A(\lambda)$, and you need to know the bandpass transmission function $R_b(\lambda)$.
 That's a lot, and all of these things are, in general, subject to substantial theoretical and observational uncertainties.
-That said, things get simpler as the bandpass $R(\lambda)$ gets narrower in wavelength space:
-As $R(\lambda)$ becomes more concentrated around some central wavelength $\lambda_0$, $A(R)$ approaches $A(\lambda_0)$.
+That said, things get simpler as the bandpass $R_b(\lambda)$ gets narrower in wavelength space:
+As $R_b(\lambda)$ becomes more concentrated around some central wavelength $\lambda_0$, $A(b)$ approaches $A(\lambda_0)$.
 And indeed, much extinction work is done in this limit (and takes on corresponding inaccuracies for very red and very blue stars).
 
 In general the optical-depth and extinction functions $\tau(\lambda)$ and $A(\lambda)$ are larger at shorter wavelengths.
@@ -478,7 +486,8 @@ To parameterize this, it is traditional to define a dust reddening law parameter
 \begin{align}
     R(V) &= \frac{A(V)}{A(B) - A(V)}\label{eq:RV} ~,
 \end{align}
-which typically has values in the 2 to 3 range (HOGG CITE), and varies with environment and redshift (HOGG CITE).
+which typically has values in the 2 to 3 range (HOGG CITE), and varies with environment and redshift (HOGG CITE).\footnote{%
+The reddening-law parameter $R(V)$ should not be confused with the bandpass function $R_b(\lambda)$. We apologize for the over-loaded notation, but this paper collides multiple literatures.}
 This ratio $R(V)$ was originally conceived as the slope of a ``reddening vector'' on a color--absolute-magnitude diagram; the reddening vector points in the direction in the space of $B-V$ color and absolute magnitude $M_V$ that a star would move if the amount of interstellar dust along its line of sight were increased.
 This definition \eqref{eq:RV} refers everything to the $B$ and $V$ bands, which is traditional, but not required (and it could be re-done in any bands)
 Usually everything is referenced to $V$ and $B-V$ but it doesn't have to be!
@@ -488,20 +497,20 @@ Relevant to comments above, the idea that this number $R(V)$ can be defined with
 
 We mentioned above the counterfactual absurdity in cosmology that often enormous and cosmologically distant objects are described in terms of absolute magnitudes.
 If that isn't bad enough:
-Cosmologically distant objects are usually redshifted with respect to us, such that the wavelengths of the light that fall into our transmission function $R(\lambda)$ here in the Solar System were shorter when they were emitted in the rest frame of the target.
+Cosmologically distant objects are usually redshifted with respect to us, such that the wavelengths of the light that fall into our transmission function $R_b(\lambda)$ here in the Solar System were shorter when they were emitted in the rest frame of the target.
 This leads to another kind of correction, coming from this relativistic Doppler shift.
 
 We have discussed this in great detail elsewhere \cite{kcorrect}, but briefly, we define a correction $K(z)$ such that
 \begin{align}
-    m_R &= M_R + DM(z) + A(R) + K(z)\label{eq:K}\\
-    K &= -2.5\logten\frac{\xi_{Rz}}{\xi_{R0}}\\
-    \xi_{Rz} &= \int\frac{L_\lambda(\lambda/[1+z])}{([1+z]\,h\,c/\lambda)}\,R(\lambda)\,\dd\lambda\\
-    \xi_{R0} &= \int\frac{L_\lambda(\lambda)}{(h\,c/\lambda)}\,R(\lambda)\,\dd\lambda ~,
+    m_b &= M_b + DM(z) + A(R) + K(z)\label{eq:K}\\
+    K &= -2.5\logten\frac{\xi_{bz}}{\xi_{b0}}\\
+    \xi_{bz} &= \int\frac{L_\lambda(\lambda/[1+z])}{([1+z]\,h\,c/\lambda)}\,R_b(\lambda)\,\dd\lambda\\
+    \xi_{b0} &= \int\frac{L_\lambda(\lambda)}{(h\,c/\lambda)}\,R_b(\lambda)\,\dd\lambda ~,
 \end{align}
 where $z$ is the redshift,
 it is important that the distance $D$ involved in the distance modulus $DM(z)$ is the luminosity distance \cite{distances},
-$K$ has a magnitude-like definition based on hypothetical signals $\xi_{Rz}, \xi_{R0}$,
-and the hypothetical signal $\xi_{Rz}$ involves the bandpass $R(\lambda)$ shifted by the Doppler factor $1+z$.
+$K$ has a magnitude-like definition based on hypothetical signals $\xi_{bz}, \xi_{b0}$,
+and the hypothetical signal $\xi_{bz}$ involves the bandpass $R_b(\lambda)$ shifted by the Doppler factor $1+z$.
 
 The consequences of these definitions are the following:
 The K~correction $K(z)$ vanishes if either the redshift $z$ is zero or else the target source has a spectrum like $\lambda\,L_\lambda(\lambda)=\nu\,L_\nu(\nu)=\text{constant}$ at the relevant wavelengths.
