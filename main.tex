@@ -179,10 +179,11 @@ where $C_b$ and $C^{(0)}_b$ are numbers proportional to the expected photon coun
 and the all-important factor of $h\,c/\lambda$ turns energy flux density into photon flux density.
 If you prefer to work in frequency units, you can use the flux density $f_\nu(\nu)$ that has units of energy per time per area per frequency, and the expected counts equations become
 \begin{align}
-    C_b &= \int \frac{f_\nu(\nu)}{h\,\nu}\,R_b(\nu)\,\dd\nu\\
+    C_b &= \int \frac{f_\nu(\nu)}{h\,\nu}\,R_b(\nu)\,\dd\nu \label{eq:countsnu}\\
     C^{(0)}_b &= \int \frac{f^{(0)}_\nu(\nu)}{h\,\nu}\,R_b(\nu)\,\dd\nu ~,
 \end{align}
-where now the factor of $h\,\nu$ turns energy flux density into photon flux density, but everything else is the same.
+where now the factor of $h\,\nu$ turns energy flux density into photon flux density, but everything else is the same.\footnote{%
+  Sometimes the integral \eqref{eq:countsnu} is written as $$\int f_\nu(\nu)\,R_b(\nu)\,\dd\ln\nu$$ but I don't like this because writing $\dd\nu/\nu$ as $\dd\ln\nu$ obscures the point that the factor of $1/\nu$ comes from the energy-per-photon factor.}
 The two different kinds of flux densities $f_\lambda(\lambda)$ and $f_\nu(\nu)$ and the two transmission functions $R_b(\lambda)$ and $R_b(\nu)$ are related by
 \begin{align}
     \nu\,f_\nu(\nu) &= \lambda\,f_\lambda(\lambda) \mbox{~~s.t.~} \lambda = \frac{c}{\nu}\\
@@ -342,7 +343,7 @@ The distance-modulus expression \eqref{eq:DM} invoves a $+5$ and not a $-2.5$ be
 The consequences of these definitions are as follows:
 The distance modulus is measured in the same units as magnitudes, and it increases with distance.
 $DM=0$ at $D=10\,\pc$, and $DM=10$ at $D=1\,\kpc$ (for example).
-The absolute magnitude $M_b$ of the target star through a transmission function $R_b(\lambda)$ is near zero if its intrinsic luminosity is similar to the intrinsic luminosity of the standard star, as measured (in the case of photon-counting devices) by photon luminosity in the bandpass.
+The absolute magnitude $M_b$ of the target star through a transmission function $R_b(\lambda)$ is near zero if its intrinsic luminosity is similar to the intrinsic luminosity of the standard star, as measured by photon luminosity in the bandpass.
 The absolute magnitude is positive if the target star---placed counterfactually at a distance of $10\,\pc$---would be fainter than the standard star, and negative if the target star would be brighter.
 
 One absurdity of cosmology is that absolute magnitudes are often used for cosmologically distant sources like quasars and galaxies, which could never be observed from a distance of $10\,\pc$---they are far, far larger in size than $10\,\pc$!
@@ -418,7 +419,7 @@ In this case the absolute bolometric magnitude itself becomes a sum of two terms
     M_\bol &= M_{\bol,\odot} - 2.5\,\logten \frac{L}{L_\odot}~,
 \end{align}
 where $M_{\bol,\odot}$ is the absolute bolometric magnitude of the Sun, and the second term is like a bolometric absolute magnitude but referenced to the Sun instead of the fundamental standard.\footnote{%
-Although the Sun and Vega are about as well understood as stars can be, theorists are not always on the same page with regard to the Vega-relative Solar bolometric magnitude. It is important enough to astrophysical practice that the IAU adopted a reference value with resolution 2015.B2 to make the literature more definite.}% CITE - IAU definition of a standard, IAU 2015.B3 (https://arxiv.org/abs/1510.06262)
+Although the Sun and Vega are about as well understood as stars can be, theorists are not always on the same page with regard to the Vega-relative Solar bolometric magnitude. It is important enough to astrophysical practice that the IAU adopted a reference value with resolution 2015.B2 to make the literature more definite.}% HOGG CITE - IAU definition of a standard, IAU 2015.B3 (https://arxiv.org/abs/1510.06262)
 
 HOGG: Where to say this? There are also apparent bolometric magnitudes. They are defined how? And, unlike the absolute bolometric magnitudes, they can (in principle) be measured without a theoretical physical model for any star. But in practice they can't be, really.
 
@@ -477,7 +478,9 @@ a lot of extinction work involves the $B$ and $V$ photometric bandpasses, or tra
 The consequences of these definitions are the following:
 The extinctions $A(\lambda)$ and $A(R)$ are zero if there is no interstellar attenuation, and positive otherwise.
 They increase with the amount of intervening interstellar dust.
-The reddening $E(B-V)$ has the same properties, and will for any color index you like, provide that the color index is defined in the usual way, as the shorter-wavelength bandpass magnitude minus the longer-wavelength bandpass magnitude.
+The reddening $E(B-V)$ has the same properties---zero at zero attenuation, and increasing with increasing attenuation---and it usually will for any color index you like, provided that the color index is defined in the usual way, as the shorter-wavelength bandpass magnitude minus the longer-wavelength bandpass magnitude.
+This is because dust generally reddens a source!
+The sign might change in bandpasses that are near or span a strong feature in the dust attenuation law, such as HOGG WHAT AND CITE?
 
 HOGG: How, in practice, do you estimate $A()$ and $E()$?
 
@@ -525,26 +528,75 @@ We recommend that as a jumping-off point if you are working on such projects.
 
 \section{Real-world measurement}\label{sec:practice}
 
-HOGG: Everything has been so theoretical here! How does it really work in practice?
+Everything above has been about the \emph{theoretical expectations} for magnitudes and corrections, which you can compute under the strong assumptions that you know your bandpass and the spectra of your target star.
+But the whole original point of the magnitude system is that you can \emph{measure} apparent magnitudes without knowing any of those things.
+How do these measurements work in practice?
 
-HOGG: Old school: Standard stars tied to Vega or BD+17. Issues of saturation and nonlinearity. Don't use the same exposure time; use secondary standards; etc.
+The first comment to make is that it is rare now to actually directly compare your target star with the standard star.
+That is, it is rare to point the same instrument and telescope at the target star and at the zeroth magnitude Vega.
+This is because, in general, contemporary science targets are faint, and detectors don't have the dynamic range to observe the target star and Vega in the same mode.
+So in practice the usual approach is to calibrate the science target to a set of fainter secondary standards, which have been calibrated relative to the standard (see, for example, \cite{landolt}).
+That's great!
 
-HOGG: New school: Synthetic magnitudes against a well-calibrated wide-field survey of comparable depth. Define synthetic magnitudes carefully!
+HOGG Note here about tracking airmass changes and correcting both things to standard airmass.
 
-HOGG: Noise in the measurements. Noise in log quantities.
+Of course if you are doing very precise work, it will turn out that the bandpass at which you are doing your observations don't match exactly the bandpasses which were used to measure the secondary standard stars.
+You have to match these bandpasses, and you usually do this by a regression or interpolation, in which you learn functional forms for \emph{synthetic magnitudes}.
+That is, you find a linear (or nonlinear) combination of the bandpasses that were used to perform the secondary calibration to create an approximation to the magnitudes for the secondary stars that \emph{would have been observed} if the secondary stars had been compared to the primary standard through the bandpass in which you are working.
+This is complicated! But it is also data-driven: If you have enough measured secondary standards and they span enough range in temperature, the construction of these synthetic magnitudes is generally possible.
+
+If you want to produce not just apparent magnitudes for your target stars, but also some kind of uncertainty estimate, there are several things to consider.
+The first is that the magnitude is a logarithm of a ratio of counts.
+If each of these counts is subject to a quasi-Gaussian noise (perhaps a sum of high-count Poisson noise, Gaussian sky noise, and some kind of detector read noise), the logarithm of the ratio of them will not, in general, have quasi-Gaussian noise.
+In particular, the noise on a magnitude will tend to be ``fat-tailed'', and also skew.
+The next thing to consider is that there are many systematic-noise or bias contributions to the measurment, including from mis-estimation of differential atmospheric extinction, inconsistency in the synthetic-magnitude system in use, and detector non-linearities.
+A full discussion of the noise in a measurement like this is far out of scope.
+
+Nowadays, the secondary standards are often not really standards at all:
+Often the calibration of new photometry or new imaging is made with respect to prior imaging of that same patch of sky, from a large survey (such as \textsl{2MASS} \cite{2mass} or \textsl{SDSS} \cite{sdss} or \textsl{PanSTARRS} \cite{panstarrs}).
+Once again, synthetic magnitudes must be created, but if the prior imaging overlaps your target-star field, you can often make the comparisons required for your apparent magnitude measurements within your science imaging itself, without taking additional calibration frames.
+That has really changed astrophysics enormously.\footnote{This point was made in multiple contributions, now lost in time, at the XXX meeting in honor of Arlo Landolt HOGG.}
+
+If you want to create your own secondary standards, because, say, you need standards in a new magnitude range, or, say, you need standards that are in some particular temperature or metallicity ranges, there are a host of considerations.
+Any complete discussion of those considerations is out of scope here, but the issues include that noise sources, sky levels, and even detector properties can vary with the incident intensity of the star.
+Calibrating secondary standards many magnitudes away from the primary standard requires extremely detail-oriented work.
 
 \section{Comments and discussion}\label{sec:discussion}
 
+The writing of this \documentname{} was originally inspired by a few conversations I have had about computing expectations for apparent magnitudes and bolometric corrections with experienced scientists.
+In these conversations, sometimes the inclusion of the $(h\,c/\lambda)$ factor in the integral \eqref{eq:counts} led to expressions of surprise or even disbelief.
+It is easy to naively assume that a magnitude is an integral of an energy, especially since the filter curves are measured using intensity measurements.
+It is not!
+If there is one important take-away from this \documentname, it is that it is important to perform the integrals carefully and with the correct photon-counting ``kernel'' as it were.
+And, in this context, it is important to see the transmission curve $R_b(\lambda)$ as the expected contribution to the detector signal from a \emph{photon} at the top of the atmosphere.
+
+For an example of how upsetting these integral kernels are, consider the expressions for the bolometric magnitudes in \secref{sec:bc}:
+These expressions mix up logarithms of ratios of integrals that do and don't have the energy-per-photon factor.
+That's not good, intellectually.
+
+On a related side note:
+If you actually do these expectation integrals (on a computer, say), you will find that results can depend on the integration scheme and stepsize.
+Stellar spectra are highly featured, and the features can be narrow and sharp.
+
 \begin{itemize}
-\item Be careful how you do your integrals.
-\item The bolometric correction (when used in a CCD context) mixes different kinds of integrals, which is doubly confusing.
-\item Comment on effective wavelengths of bandpasses.
-\item Comment on how things simplify as bandpasses get narrow.
-\item Comment on how things get terrible as bandpasses get wide.
-\item Comment on airmass, the atmosphere, the effects on bandpasses, especially in IR and UV, etc.
-\item Surface brightness and the magnitudes-per-square-arcsecond abomination.
-\item Why do the integrals involve fluxes and not intensities? Intensities are more fundamental!
+\item HOGG Comment on effective wavelengths of bandpasses.
+\item HOGG Comment on how things simplify as bandpasses get narrow.
+\item HOGG Comment on how things get terrible as bandpasses get wide.
+\item HOGG Comment on airmass, the atmosphere, the effects on bandpasses, especially in IR and UV, etc.
 \end{itemize}
+
+In everything above, I considered only the magnitudes of point sources (or compact sources anyway).
+Isn't this odd, since really intensity is the fundamental quantity in electromagnetism?\footnote{The intensity is related to the phase-space density of photons, which is what is preserved along geodesic trajectories in a transparent Universe. Fluxes are not preserved; see, for example, gravitational lensing magnifications \cite{blandford}.}
+Of course astronomers do measure intensities very often---optical astronomers often call these ``surface brightnesses''---and they often use the same techniques described above, but with modifications to account for the distribution of the light in the detector image plane.
+The only comment I will make about that is that optical astronomers often use units of ``magnitudes per square arcsecond'' for such measurements, which is an abomination and ought to be avoided.
+After all magnitudes don't increase linearly with solid angle!
+In general it is probably a bad idea to tie an intensity mearsurement (surface brightness) to a flux measurement (from the standard star Vega), because these things have very different units.
+That said, I don't have a worked-out alternative recommendation at present.
+
+In the long run, if we want to make extremely repeatable photometric measurements from the ground, and if we want those measurements to be tied to an accurately known and stable standard source, it might make sense to \emph{fly} a standard star.
+That is, it might be a good idea to put a stable black-body (or set of black-bodies) onto a spacecraft and place it onto some useful orbit.
+Such things have been proposed \cite{wacky}, and indeed the extremely precise \textsl{FIRAS} HOGG CHECK \cite{firas} measurements of the cosmic microwave background intensity---which are perhaps the most accurate astronomical measurements of intensity ever made---were made by making on-board comparisons to an on-board standard intensity source.\footnote{In this sentence I am intentionally using the word ``accurate''; I make a strong distinction between precision and accuracy.}
+If astronomical photometry has a high-accuracy future---and not just a high-precision future---something of this nature might be required.
 
 \bibliographystyle{plain}
 \raggedright
