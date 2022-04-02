@@ -487,8 +487,6 @@ The reddening $E(B-V)$ has the same properties---zero at zero attenuation, and i
 This is because dust generally reddens a source!
 The sign might change in bandpasses that are near or span a strong feature in the dust attenuation law, such as HOGG WHAT AND CITE?
 
-HOGG: How, in practice, do you estimate $A()$ and $E()$?
-
 Different kinds of dust---with, say, different particle size distributions---have different kinds of extinction and reddening behaviors as a function of wavelength.
 To parameterize this, it is traditional to define a dust reddening law parameter $R(V)$ (HOGG WHAT IS THIS CALLED??) as
 \begin{align}
@@ -499,7 +497,11 @@ The reddening-law parameter $R(V)$ should not be confused with the bandpass func
 This ratio $R(V)$ was originally conceived as the slope of a ``reddening vector'' on a color--absolute-magnitude diagram; the reddening vector points in the direction in the space of $B-V$ color and absolute magnitude $M_V$ that a star would move if the amount of interstellar dust along its line of sight were increased.
 This definition \eqref{eq:RV} refers everything to the $B$ and $V$ bands, which is traditional, but not required (and it could be re-done in any bands)
 Usually everything is referenced to $V$ and $B-V$ but it doesn't have to be!
-Relevant to comments above, the idea that this number $R(V)$ can be defined without reference to the spectrum $L_\lambda(\lambda)$ of the target star shows that this measure of the dust reddning law is being understood in the narrow-bandpass limit, and necessarily limits its precision for detailed photometry.
+Relevant to comments above, the idea that this number $R(V)$ can be defined without reference to the spectrum $L_\lambda(\lambda)$ of the target star shows that this measure of the dust reddening law is being understood in the narrow-bandpass limit, and necessarily limits its precision for detailed photometry.
+
+HOGG: How, in practice, do you estimate $A()$ and $E()$?
+
+HOGG: Note that when the bandpasses are narrow, $A()$ and $E()$ increase linearly with the column density of dust along the line of sight. But when the bandpasses are wide, this is not true. Explain why not!
 
 \section{K correction}\label{sec:kcorrect}
 
@@ -531,6 +533,8 @@ Thus---unlike how we have written the definition \eqref{eq:K}---the bandpass in 
 That is out of scope here, but it is precisely the scope of our previous writing on this subject \cite{kcorrect}.
 I recommend that as a jumping-off point if you are working on such projects.
 
+HOGG: Amusing point that redshifting doesn't necessarily make things redder! It depends on the detailed shape of the spectrum...
+
 \section{Real-world measurement}\label{sec:practice}
 
 Everything above has been about the \emph{theoretical expectations} for magnitudes and corrections, which you can compute under the strong assumptions that you know your bandpass and the spectra of your target star.
@@ -554,7 +558,7 @@ If you want to produce not just apparent magnitudes for your target stars, but a
 The first is that the magnitude is a logarithm of a ratio of counts.
 If each of these counts is subject to a quasi-Gaussian noise (perhaps a sum of high-count Poisson noise, Gaussian sky noise, and some kind of detector read noise), the logarithm of the ratio of them will not, in general, have quasi-Gaussian noise.
 In particular, the noise on a magnitude will tend to be ``fat-tailed'', and also skew.
-The next thing to consider is that there are many systematic-noise or bias contributions to the measurment, including from mis-estimation of differential atmospheric extinction, inconsistency in the synthetic-magnitude system in use, and detector non-linearities.
+The next thing to consider is that there are many systematic-noise or bias contributions to the measurment, including from mis-estimation of differential atmospheric extinction, inconsistency in the synthetic-magnitude system in use, and detector nonlinearities.
 A full discussion of the noise in a measurement like this is far out of scope.
 
 Nowadays, the secondary standards are often not really standards at all:
@@ -578,7 +582,7 @@ And, in this context, it is important to see the transmission curve $R_b(\lambda
 For an example of how upsetting these integral kernels are, consider the expressions for the bolometric magnitudes in \secref{sec:bc}:
 These expressions mix up logarithms of ratios of integrals that do and don't have the energy-per-photon factor.
 That's not good, intellectually.
-But it's required, unfortunately, because most kinds of theory predict integrated energy outputs of stars, not integrated \emph{photon} outputs.
+But it's required, unfortunately, because most kinds of optical detectors are photon-counting devices, and yet most kinds of theory predict integrated energy outputs of stars, not integrated \emph{photon} outputs.
 
 On a related side note:
 If you actually do these expectation integrals (on a computer, say), you will find that results can depend on the integration scheme and stepsize.
@@ -589,6 +593,7 @@ HOGG Comment on effective wavelengths of bandpasses. Mainly useful for plotting.
 Related to all this on effective wavelengths, it is generally true that the analysis or prediction or interpretation of apparent magnitudes gets far simpler when \emph{bandpasses get narrow}, and gets far more complicated when \emph{bandpasses get broader}.
 The concept of the effective wavelength of a bandpass is more dependent on the detailed stellar spectrum the broader the bandpass, and is more uniform across stellar spectra the narrower the bandpass.
 For example, the effect of dust attenuation is more dependent on the detailed stellar spectrum the broader the bandpass, and is more uniform across stellar spectra the narrower the bandpass.
+HOGG: EXPLICITLY Point to relevant dust equation for $A(\lambda)$.
 One might ask: Then why not just work in narrow bandpasses?
 Indeed, some projects have taken this route \cite{combo17}.
 But in the end, the choice of a bandpass is a balance between signal-to-noise (which pushes projects to broader bandpasses) and spectral specificity or resolution (which pushes projects to narrower bandpasses).
