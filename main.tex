@@ -1,25 +1,27 @@
 % This document is not part of any project.
-% Copyright 2022 the authors.
+% Copyright 2022 David W Hogg (NYU) (Flatiron).
 
 % style notes:
 % ------------
-% - The object of interest is the "target" or "target star".
-% - The source is a "star". Even though we will talk about K corrections!
-% - Are we completely consistent in terminology about what we call the flux spectral density?...?
+% - The object of interest is the "target" or "target star". What do we think about the word "source"? The text is a bit inconsistent here.
+% - The source is a "star". Even though I will talk about K corrections!
+% - Am I completely consistent in terminology about what I call the flux spectral density?...?
 % - Is the magnitude measured THROUGH a bandpass or IN a bandpass? Through! Audit.
 % - The first time any term is introduced or defined, put it in \emph{}. Audit for this.
-% - Audit for first person. We should use it sparingly, and be consistent about I vs we. I think I should do "I" now, not "we", but "we" still exists at places. Audit AGAIN.
+% - First person is used sparingly and it is I, my not we, our.
 
 % to-do items:
 % ------------
-% - Who is the audience? Theorist vs observer / and also / physicist vs astronomer.
-% - Make sure this paper (and the cheat sheet) contains the classic equations like m = M + DM + K and m = m_bol + BC, etc. And make sure the signs are right!
 % - Maybe talk about intensity very early on?
 %.- Be sure to talk about the absurdity of putting a galaxy at 10 pc!!
 % - Discuss differences between intensive and extensive quantities. Which are which, and where do they appear?
+% - The bolometric correction is maybe not defined in the AB magnitude system??
 % - Maybe mention and cite the Oke and Gunn work on calibrating Vega?? The blackbody source??
 % - Maybe cite Landolt and Aaronson and others on secondary standards?
+% - Make sure we cite uber-calibration and self-calibration in the practice section?
 % - Work through Rix comments from 2022-02-09-ish (NYU email).
+% - In the infrared, Vega has a debris disk?? Gizis mentions this.
+% - Do I clearly say that the SAME piece of glass in front of a CCD and a bolometer leads to different bandpasses? This should be in the transmission-function section.
 
 % Aaron's things to work into the text:
 % -------------------------------------
@@ -32,6 +34,8 @@
 \usepackage[letterpaper]{geometry}
 \usepackage{amsmath}
 \usepackage[dvipsnames]{xcolor}
+\usepackage{etoolbox}% EVIL
+\usepackage{changepage}
 
 % margin note / footnote hack
 \setlength{\marginparsep}{0.15in}
@@ -56,6 +60,14 @@
 \pagestyle{myheadings}
 \markboth{}{\color{darkgray}\sffamily Hogg / What is a magnitude?}
 \renewcommand{\paragraph}[1]{\par\addvspace{1.5ex}\noindent\textbf{#1}~---}
+\patchcmd{\thebibliography}% EVIL
+  {\settowidth}
+  {\setlength{\parsep}{1ex}\setlength{\itemsep}{0pt plus 0.1pt}\settowidth}
+  {}{}
+\newlength{\foo}
+\setlength{\foo}{\marginparwidth}
+\addtolength{\foo}{\marginparsep}
+\newenvironment{wider}{\begin{adjustwidth}{0in}{-\foo}}{\end{adjustwidth}}
 \sloppy\sloppypar\raggedbottom\frenchspacing
 
 % text macros
@@ -88,12 +100,14 @@ Magnitudes, distance moduli, bolometric corrections, and so much more}
 It is a pleasure to thank
 Ivan Baldry (Liverpool),
 Vasily Belokurov (Cambridge),
+Rebecca Bernstein (GMT),
 Michael Blanton (NYU),
 Katie Breivik (Flatiron),
 Aaron Dotter (Harvard),
 Daniel Eisenstein (Harvard),
 Will Farr (Stony Brook),
 John Gizis (Delaware),
+Gregory Green (MPIA),
 Jim Gunn (Princeton),
 Gerry Neugebauer (deceased),
 Bev Oke (deceased),
@@ -107,16 +121,16 @@ and the Astronomical Data Group at the Flatiron Institute, for valuable discussi
 
 \bigskip
 \paragraph{Abstract}
-This pedagogical document---aimed at those for whom astronomical arcana seem arcane---endeavours to explain the concepts of magnitudes, color indices, absolute magnitudes, distance moduli, extinctions, attenuations, color excesses, K~corrections, and bolometric corrections.
+This pedagogical document about stellar photometry---aimed at those for whom astronomical arcana seem arcane---endeavours to explain the concepts of magnitudes, color indices, absolute magnitudes, distance moduli, extinctions, attenuations, color excesses, K~corrections, and bolometric corrections.
 I include some discussion of observational technique, and some discussion of epistemology, but the primary focus here is on the theoretical or interpretive connections between the observational astronomical quantities and the physical properties of the observational targets.
 
 \section{Introduction}\label{sec:intro}
 
-Famously, a magnitude is negative-$2.5$ times the base-ten logarithm of a brightness or flux.
+Famously, an astronomical magnitude is negative-$2.5$ times the base-ten logarithm of a brightness or flux.
 But that isn't quite right.
 It is negative-$2.5$ times the base-ten logarithm of a \emph{ratio of two signals},
-the numerator being the signal from a detector (and filter) measuring the electromagnetic flux from the star of interest, and the denominator being the hypothetical (or actual) signal from that same detector (and filter) measuring a particular standard star (usually Vega, but sometimes another star like perhaps BD+17, or secondary standards, or hypothetical synthetic sources).
-Magnitudes aren't just logarithmic, they are \emph{relative}.
+the numerator being the signal from a detector (and filter) measuring the electromagnetic radiation from the star of interest, and the denominator being the hypothetical (or actual) signal from that same detector (and filter) measuring a particular fundamental standard star (usually Vega, but sometimes another star like perhaps BD+17, or secondary standards, or hypothetical synthetic sources).
+Magnitudes aren't just logarithmic, they are logarithmic measures of \emph{relative} brightness.
 
 Astronomy is an \emph{observational} (as opposed to \emph{experimental}) science, and it is old.
 This \documentname{} is aimed at physicists, who, reluctantly or otherwise, find that they must use astronomical observations in their research.
@@ -125,52 +139,59 @@ Even card-carrying observational astronomers\footnote{The author is a card-carry
 That's not embarrassing; the connections between in-practice observations and in-theory properties of stars (and galaxies so on) are complex.
 
 Astronomers and non-astronomers alike love to make fun of the magnitude system as archaic and weird.
-But it has an important epistemological role in astronomy, where controlled experiments are not possible, and the only calibration sources available for incompletely understood astronomical objects are \emph{other} incompletely understood astronomical objects:
+But it has an important epistemological role in astronomy, where controlled experiments are not possible,\footnote{You could imagine having a set of calibration sources orbiting the Earth; I will return to this idea at the end in \secref{sec:discussion}.} and the only calibration sources available for incompletely understood astronomical objects are \emph{other} incompletely understood astronomical objects:
 Magnitudes are by their nature \emph{relative}, and relative in a purely empirical sense.
-Of course there are questionable innovations, like the AB magnitude system \cite{ab}, which destroy the empirical relativity of the photometry system,\footnote{In what follows we will make some comments about the epistemological status of various magnitude-related quantities. The move made in the AB system away from a particular standard star and towards a counterfactual non-existent standard spectrum is helpful for theoretical interpretation, but bad for accuracy and legacy standardization.} but the fundamental idea that a magnitude is based on a ratio of signals is sound and sensible:
+Of course there are questionable innovations, like the AB magnitude system \cite{ab}, which destroy the empirical relativity of the photometry system,\footnote{In what follows I will make some comments about the epistemological status of various magnitude-related quantities. The move made in the AB system away from a particular standard star and towards a counterfactual non-existent standard spectrum is helpful for theoretical interpretation, but bad for accuracy and legacy standardization. In practice there isn't much difference, operationally, between AB and Vega-relative magnitudes, because in practice most projects are calibrating relative to secondary standards, as will be discussed in \secref{sec:practice}.} but the fundamental idea that a magnitude is based on a ratio of signals is sound and sensible:
 By always involving ratios of empirical measurements, magnitudes permit extremely precise photometric measurements to be made in the face of large (historically enormous) absolute uncertainties about anything's true spectral density, and any detector's absolute sensitivity.
 
 The magnitude system predates much of contemporary physics.
 Indeed it predates quantitative natural science!\footnote{The numerical magnitude system predates natural science and yet the function $-2.5\,\logten()$ is a good fit to ancient by-eye numerical stellar classifications, as is the function $-\ln()$. It's miraculous that intuitive human numbers come close to measurements in a natural-logarithm basis. Presumably this reveals something about the human visual perception apparatus.}
 Being ancient, the magnitude system, as astronomy has modernized into an intellectual enterprise that parallels and overlaps contemporary physics, entrains a great deal of jargon and esoterica.
 These include distance moduli, K~corrections, color excesses, and bolometric corrections.
-We we will attempt to define and discuss all of these in in what follows.
-This \documentname{} reinforces, repeats, and extends content we have written previously \cite{kcorrect}, and nothing here is new!
+I will attempt to define and discuss all of these in in what follows.
+This \documentname{} reinforces, repeats, and extends content to which I have contributed previously \cite{kcorrect}, and nothing here is new!
 This is a purely pedagogical contribution.
 
 Given that observational astrophysics is now technically sophisticated and extremely well equipped, why do we continue to use magnitude systems?
-HOGG: SUMMARIZE BLANTON POINTS HERE. SEE EMAIL.
+Obviously there are many answers to this question.
+Some relate to the empirical precision considerations above.
+But mostly it comes down to the point that astronomical photometric observations (especially of faint objects) involve integrations of stellar (or galaxy or quasar) radiation through broad (wavelength) bandpasses.\footnote{%
+This argument owes a lot to discussions I've had over the years with Michael Blanton (NYU).}
+There is no sense in which these photometric observations can be accurately summarized as spectral densities $f_\lambda$ at particular wavelengths $\lambda$; indeed our bandpasses are generally so wide that they don't resolve any of the interesting spectral features (atomic and molecular lines, for example).
+The magnitude system is a compact and traditional way for astronomers to communicate precisely and concisely about these broad-band observations.
 
-There is a constant tension in astronomy between the goal of measuring quantities that are simple and stable to calculate and theorize about, and measuring quantities that are simple and stable to \emph{observe}.
-Theoretical simplicity and observational simplicity are desiderata in tension.
+Because of this, there are conflicts in astronomy between the goal of measuring quantities that are simple and stable to calculate and theorize about, and the goal of measuring quantities that are simple and stable to observe and communicate about.
+Theoretical simplicity and observational simplicity are desiderata in tension.\footnote{%
+In addition to these concepts of simplicity, there are many contexts in which photometry needs to be precise in a relative sense but does not need to be precisely or accurately interpretable.
+For example, extremely small exoplanet transits can be detected in photometry that is precise from epoch-to-epoch, even if the photometric system is not well defined in any other sense; for example \cite{kepler}.}
 The magnitude system---at least the apparent magnitude system---is designed only with observational simplicity in mind.
 Thus the goal here is to give the translations between these simple observational definitions and the theoretical quantities of interest.
 
-Because magnitudes and colors are based on ratios of detector signals, they depend on the detector technology through which those signals are produced.
+Magnitudes and colors are based on ratios of detector signals, so they depend on the detector technology through which those signals are produced.
 This means that any predictions of, or physical interpretations derived from, magnitudes and colors require detailed knowledge of the detector technology, and also the filter, optics, and atmosphere that lie between the detector and the astronomical sky.
-There are subtleties involved, which we attempt to elucidate.
+There are subtleties involved, which I attempt to elucidate, below.
 Suffice it to say that even something as apparently simple as the comparison of the brightnesses of two stars is not trivial, from a theoretical or fundamental-astronomy perspective.
 
-We are not particularly interested in history here.
-We are interested in the conceptual structure and relationships of quantities fundamental astronomy.
+I am not particularly interested in history here.
+I am interested in the conceptual structure and relationships of quantities fundamental astronomy.
 However, if you have interests in the history, there is at least one excellent book on the subject by Hearnshaw \cite{hearnshaw}.
 
 \section{Apparent magnitude}\label{sec:mag}
 
-An apparent magnitude $m_b$ of a star depends on a bandpass $b$ or its transmission function $R_b(\lambda)$, the star itself or its flux density $f_\lambda(\lambda)$, and a choice of standard star or standard flux density $f^{(0)}_\lambda(\lambda)$.
+An apparent magnitude $m_b$ of a star depends on a bandpass $b$ or its transmission function $R_b(\lambda)$, the star itself or its flux density $f_\lambda(\lambda)$, and a choice of fundamental standard star or standard flux density $f^{(0)}_\lambda(\lambda)$.
 We'll say a lot more about the transmission function in \secref{sec:transmission};
 for now let's imagine that the transmission function $R_b(\lambda)$ is a function that varies between 0 and 1.
 It represents, at every wavelength $\lambda$ (or equivalently every frequency $\nu$) what fraction of the incident intensity at that wavelength (or frequency) incident \emph{on the top of the Earth's atmosphere} passes through the atmosphere and optical path and is detected or recorded by the detector.
 We'll complexify that definition a bit in \secref{sec:transmission}.
-In what follows, we will assume that the transmission function $R_b(\lambda)$ has been correctly estimated, incorporating atmosphere, optics, filter glass, and detector (all of which matter).
+In what follows, I will assume that the transmission function $R_b(\lambda)$ has been correctly estimated, incorporating atmosphere, optics, filter glass, and detector (all of which matter; more on this in \secref{sec:transmission}).
 
 The flux density $f_\lambda(\lambda)$ has units of energy per time per area per wavelength.
 It can be thought of as a luminosity density divided by an area, or it can be thought of as an intensity integrated over a solid angle.
 It is an \emph{apparent} property of the star in the sense that it depends not just on the intrinsic properties of the target star, but also the distance to the star, interstellar dust absorption, and so on.
-Because we have included the effect of the atmosphere in $R_b(\lambda)$ but not (say) the interstellar medium, the relevant flux density in what follows is the flux density from the star falling on the top of Earth's atmosphere.
-The target star has a flux density $f_\lambda(\lambda)$ and the standard star or source (to which it will be compared to create the magnitude) has a flux density $f^{(0)}_\lambda(\lambda)$.
+Because the effect of the atmosphere is included in $R_b(\lambda)$ but not (say) the interstellar medium, the relevant flux density in what follows is the flux density from the star \emph{falling on the top of Earth's atmosphere}.
+The target star has a flux density $f_\lambda(\lambda)$ and the fundamental standard star or source (to which it will be compared to create the magnitude) has a flux density $f^{(0)}_\lambda(\lambda)$.
 
-Armed with the transmission function $R_b(\lambda)$, the target-star flux density $f_\lambda(\lambda)$, and the standard-star flux density $f^{(0)}_\lambda(\lambda)$, the (asymptotically expected) magnitude $m_b$ as measured by a photon-counting device (such as a CCD) is given by the following
+Armed with the transmission function $R_b(\lambda)$, the target-star flux density $f_\lambda(\lambda)$, and the fundamental standard-star flux density $f^{(0)}_\lambda(\lambda)$, the (asymptotically expected) magnitude $m_b$ as measured by a photon-counting device (such as a CCD) is given by the following
 \begin{align}
     m_b &= -2.5\logten\frac{C_b}{C^{(0)}_b}\label{eq:mag}\\
     C_b &= \int \frac{f_\lambda(\lambda)}{(h\,c/\lambda)}\,R_b(\lambda)\,\dd\lambda\label{eq:counts}\\
@@ -178,6 +199,8 @@ Armed with the transmission function $R_b(\lambda)$, the target-star flux densit
 \end{align}
 where $C_b$ and $C^{(0)}_b$ are numbers proportional to the expected photon counts detected per unit time in an exposure of the target star and of the standard star,
 and the all-important factor of $h\,c/\lambda$ turns energy flux density into photon flux density.
+Because the magnitude is a logarithm of a ratio of (dimensionally identical) signals, the magnitude is a dimensionless quantity, by construction.
+
 If you prefer to work in frequency units, you can use the flux density $f_\nu(\nu)$ that has units of energy per time per area per frequency, and the expected counts equations become
 \begin{align}
     C_b &= \int \frac{f_\nu(\nu)}{h\,\nu}\,R_b(\nu)\,\dd\nu \label{eq:countsnu}\\
@@ -192,9 +215,18 @@ The two different kinds of flux densities $f_\lambda(\lambda)$ and $f_\nu(\nu)$ 
 \end{align}
 
 The important consequences of the magnitude definition \eqref{eq:mag} are as follows:
-If your target star is ``fainter'' than the standard source in the bandpass $R_b(\lambda)$---meaning that if it delivers a smaller signal in your device in this bandpass---then it will have a positive magnitude.
+If your target star is ``fainter'' than the fundamental standard source in the bandpass $R_b(\lambda)$---meaning that if it delivers a smaller signal in your device in this bandpass---then it will have a positive magnitude.
 The magnitude gets larger as the target star gets fainter.
-If the magnitude is zero (this situation is rare!), the target star is identical in apparent brightness to the standard star, given your device and bandpass.
+If the magnitude is zero (this situation is rare!), the target star is identical in apparent brightness to the fundamental standard star, given your device and bandpass.
+
+Although the definition \eqref{eq:mag} is in terms of the fundamental standard with flux density $f^{(0)}_\lambda(\lambda)$, in many cases the actual mechanism of calibration is comparison not with the fundamental standard, but with some secondary standard that has been calibrated to the fundamental.
+If we have a secondary standard star with flux density $f^{(1)}_\lambda(\lambda)$ and (known) apparent magnitude $m_b^{(1)}$ in bandpass $R_b(\lambda)$, the magnitude $m_b$ of the target star can be expressed as a different ratio of signals:
+\begin{align}
+    m_b - m_b^{(1)} &= -2.5\logten\frac{C_b}{C^{(1)}_b}\label{eq:secondary}\\
+    C^{(1)}_b &= \int \frac{f^{(1)}_\lambda(\lambda)}{(h\,c/\lambda)}\,R_b(\lambda)\,\dd\lambda ~,
+\end{align}
+where we have replaced the fundamental standard $f^{(0)}_\lambda(\lambda)$ with the secondary standard $f^{(1)}_\lambda(\lambda)$, and adjusted the magnitude to be a magnitude difference.
+We'll return to this briefly in \secref{sec:practice}.
 
 In classic astronomical parlance, the magnitude $m_b$ can be called an \emph{apparent magnitude}, where the modifier ``apparent'' indicates that it is a purely observational quantity, observed at the Earth.
 The apparent magnitude has the simple property that it can be measured without additional assumptions, but it has the complex property that its theoretical prediction or understanding involves not just the physical (intrinsic) properties of the star; it also involves the distance to the star, interstellar reddening, and other effects, all of which will be discussed below.
@@ -202,16 +234,16 @@ From an epistemological standpoint, the apparent magnitude is extremely fundamen
 
 At the risk of being extremely repetitive:
 The point of this definition \eqref{eq:mag} of the apparent magnitude is that it is very simple to very precisely \emph{measure} the magnitude.
-The definition is given in terms of integrals of the spectrum $f_\lambda(\lambda)$ of the source, and the spectrum $f^{(0)}_\lambda(\lambda)$ of the standard star, and the transmission function $R_b(\lambda)$ of the bandpass.
+The definition is given in terms of integrals of the spectrum $f_\lambda(\lambda)$ of the source, and the spectrum $f^{(0)}_\lambda(\lambda)$ of the fundamental standard star, and the transmission function $R_b(\lambda)$ of the bandpass.
 But---and this couldn't be more important---you don't need to \emph{know} any of these functions in order to measure the magnitude.
 Magnitudes existed when the only instruments observing the sky were human eyes, and knowledge of how the stars shine was considered a theoretical impossibility (and maybe also an affront to God).
 We'll say more about in-practice measurement of magnitudes in \secref{sec:practice}.
 But in most of this \documentname{} our concern is with the relationships between the observed magnitudes (or their expectations\footnote{%
-Strictly speaking the expressions in this \sectionname{} are expressions for the \emph{expectation} of the apparent magnitude. In detail, any measured magnitude involves taking the ratio of noisily measured quantities. We'll say a little more about this in \secref{sec:practice}.})
+Strictly speaking the expressions in this \sectionname{} are expressions for the \emph{expectation} of the apparent magnitude. In detail, any measured magnitude involves taking the ratio of noisily measured quantities. I'll say a little more about this in \secref{sec:practice}.})
 and the theoretical quantities, such as flux densities and lumninosity densities, not because these theoretical quantities are necessary to \emph{measure} magnitudes, but instead because they are necessary to \emph{understand} magnitudes.
 
 What's written here (and in most of what follows) is very biased towards the Vega-relative magnitude system.
-In this system, Vega ($\alpha$~Lyrae) is the standard star.
+In this system, Vega ($\alpha$~Lyrae) is the fundamental standard star.
 The next-most common system is the AB magnitude system \cite{ab}, which makes use not of a fundamental standard star as the reference source, but of a hypothetical non-existent source with a spectrum that is flat in $f_\nu(\nu)$.
 That makes AB magnitudes not directly observable but only observable through absolutely-calibrated secondary standards (see \secref{sec:practice}).
 AB magnitudes are thus easier to interpret theoretically, but harder to measure accurately, and more subject to revision, as our understandings of bandpasses, transparencies, efficiencies, and the spectrophotometry of secondary standards evolve.
@@ -223,8 +255,8 @@ In detail all that matters to the magnitude system for band $b$ is the total com
 However, in practice, the transmission function has contributions from multiple causes or elements in the optical path from the target star to the telescope.
 The most important contribution is usually the colored glass filter deliberately placed in the optical path of the light, but there are also important contributions to the transmission function from the atmosphere (which absorbs light of different wavelengths very differently) and from the detector hardware itself (which is usually at least slightly differently sensitive to photons of different wavelengths, and has some long-wavelength cutoff).
 There are also small (we hope) contributions from the telescope optical surfaces,
-and there are additional complexities arising from the fact that the atmosphere changes with time, and different observations are made through different atmospheric depths, but we will do no more than comment on these things below (\secref{sec:practice}).
-Symbolically, we can write the transmission function as a product of terms:
+and there are additional complexities arising from the fact that the atmosphere changes with time, and different observations are made through different atmospheric depths, but I will do no more than comment on these things below (\secref{sec:practice}).
+Symbolically, the transmission function can be written as a product of terms:
 \begin{align}
     R_b(\lambda) &= R_\text{atmosphere}(\lambda)\,R_\text{optics}(\lambda)\,R_\text{filter}(\lambda)\,R_\text{detector}(\lambda)~,
 \end{align}
@@ -247,18 +279,18 @@ In this case, you get a different expression for the apparent magnitude $m_b$, a
     S_b &= \int f_\lambda(\lambda)\,S_b(\lambda)\,\dd\lambda\\
     S^{(0)}_b &= \int f^{(0)}_\lambda(\lambda)\,S_b(\lambda)\,\dd\lambda~,
 \end{align}
-where now $S_b$ and $S^{(0)}_b$ are numbers proportional to the bolometer signal detected in an exposure of some duration from the target star and the standard star.
+where now $S_b$ and $S^{(0)}_b$ are numbers proportional to the bolometer signal detected in an exposure of some duration from the target star and the fundamental standard star.
 These expressions for $S_b$ and $S^{(0)}_b$ are integrated energies (or really energies per area per time), so they do not involve any factors of $h\,c/\lambda$.
 But very importantly to our message here, if $R_b(\lambda)=S_b(\lambda)$, the photon-counting and bolometer magnitudes \emph{are not the same}!
 These two magnitudes the same \emph{if and only if}
 \begin{align}
     R_b(\lambda) &= \frac{h\,c}{\lambda}\,S_b(\lambda)~.\label{eq:StoR}
 \end{align}
-From here on, in this document, we will assume that your detector is of the photon-counting variety, not the energy-integrating variety.
+From here on, in this document, It will be assumed that the detector is of the photon-counting variety, not the energy-integrating variety.
 But everything is completely technology-independent if \eqref{eq:StoR} holds.
 What isn't technology-independent is that if you have a piece of colored glass that is, say, your $V$-band filter glass, that you use on your photon-counting CCD imager, and you take it to your bolometer-equipped photometer, and you use that exact same piece of colored glass, you get a different $V$-band apparent magnitude, and solely because the photon-counting and energy-integrating devices do different integrals of the incident intensity.
 
-One point worthy of note here, perhaps, is that if you measure the transmission of a piece of colored filter glass in the standard way---by comparing the intensity transmitted to the intensity incident---you obtain the multiplicative contribution of that filter glass to $R_b(\lambda)$, if you are going to put it in front of a photon detector.
+One point worthy of note here, perhaps, is that if you measure the transmission of a piece of colored filter glass in the usual way---by comparing the intensity transmitted to the intensity incident---you obtain the multiplicative contribution of that filter glass to $R_b(\lambda)$, if you are going to put it in front of a photon detector.
 That is, since most imagers and photometers are photon-counting devices, in most cases when you are measuring a filter curve in a piece of glass, you are measuring a multiplicative contribution to $R_b(\lambda)$.
 However, if you are going to put that filter glass in front of a bolometer, what you measure is the multiplicative contribution of that filter glass to $S_b(\lambda)$.
 
@@ -266,11 +298,13 @@ There are multiple terms used for the transmission function $R_b(\lambda)$ in th
 The NASA \textsl{Hubble Space Telescope} documentation calls the transmission function $R_b(\lambda)$ the ``integrated system throughput'' \cite{acs}.
 The ESA \textsl{Gaia} documentation calls it the ``transmission'' or ``response'' function \cite{jordi}.
 The \textsl{Sloan Digital Sky Survey} documentation calls it the ``response'' function \cite{doi}.
-Sometimes these projects also compute ``effective wavelengths'' for the bandpasses, but I don't think this is very useful, so I am putting it out of scope.\footnote{HOGG: Why are these not useful?}
+Sometimes these projects also compute ``effective wavelengths'' for the bandpasses, but I don't think this is very useful, so I am putting it out of scope.\footnote{The concept of an ``effective wavelength'' is not useful for two related reasons. The first is (as noted in \secref{sec:intro}) most photometric bandpasses are so broad that it is not responsible to summarize the photometry in terms of flux densities at particular wavelengths; they are integrals over wavelength. The second is that any definition of effective wavelength essentially depends on the underlying spectrum of the target star, so it isn't really a property of the bandpass itself.}
 
 One amusing aspect of the transmission function is that it involves a term that represents the sensitivity of the detector, and multi-pixel imaging detectors (like CCDs) are made up of millions of (at least slightly) heterogeneous pixels.
 That means that, technically, even when a well-defined filter is in place, every pixel of a real-world imaging system has a slightly different transmission function, and that the effective bandpass through which an apparent magnitude is measured is a (maybe very weak) function of position in the detector.
-That's interesting, but out of scope here.\footnote{HOGG: Say something about LSST filter costs.}
+That's interesting, but out of scope here.\footnote{%
+It is amusing to note here that one of the high-cost items in the Rubin Observatory budget has been the filters, which are designed to be extremely consistent across the (enormous) focal plane \cite{lsstfilters}.
+The choice to spend here is (retrospectively) debatable, since the detector pixels themselves (plus variations in atmosphere, airmass, and so on) will lead to bandpass variations over the focal plane (and time), which will have to be accounted for in any precise analysis no matter how good the filter glass is.}
 
 HOGG: Mention the atmosphere-dependence of the bandpass here too?
 
@@ -281,7 +315,7 @@ If you only have imaging devices at your disposal---which make photometric measu
 And, if you accept the relative properties of the magnitude system (that is, that all measurements are made relative to a standard star) then the spectral information delivered by multi-band photometry is, fundamentally, information about \emph{differences in the amplitude and shape} between the spectrum of your target star and the spectrum of the standard star.
 
 The classical optical bandpasses are maybe $U,B,V,R,I,J,H,K$ spanning from the ultraviolet cutoff of the atmosphere to the longest wavelengths practicable with array detectors in windows of atmospheric transparency in the infrared.\footnote{%
-Sometimes people object to my saying that $J, H, K$, which are in the near infrared, are ``optical'' bandpasses. But my position (inherited from Gerry Neugebauer, a founder of infrared astronomy), is that ``optical'' is the name of a set of techniques, while ``ultraviolet'', ``visible'', and ``infrared'' are electromagnetic wavelength ranges. So the Spitzer Space Telescope \cite{spitzer}, for example, was an optical instrument observing in the infrared.}
+Sometimes people object to my saying that $J, H, K$, which are in the near infrared, are ``optical'' bandpasses. But my position (inherited from Gerry Neugebauer, a founder of infrared astronomy), is that ``optical'' is the name of a set of techniques, while ``ultraviolet'', ``visible'', and ``infrared'' are electromagnetic wavelength ranges. So the \textsl{Spitzer Space Telescope} \cite{spitzer}, for example, was an optical instrument observing in the infrared.}
 There are lots of other bandpasses in use, and from space the wavelength range is enormously expanded from the far-ultraviolet through the mid-infrared.\footnote{%
 HOGG: I am prejudiced against gamma-ray, X-ray, and submillimeter here. Radio never used these definitions.}
 For each of these bandpasses, if you want to interpret theoretically the spectral information it provides, it is critical to have some estimate of the transmission function $R_b(\lambda)$, as I discussed in \secref{sec:mag}.
@@ -296,9 +330,9 @@ This color---or magnitude difference---can be rearranged as follows:
         &= -2.5\logten\frac{C_B/C_V}{C^{(0)}_B/C^{(0)}_V}\label{eq:color} ~,
 \end{align}
 where $C_B$ is the expected detector signal for the target star through the $B$ bandpass (defined by \eqref{eq:counts} but using the $B$-band transmission function $R_B(\lambda)$),
-$C^{(0)}_B$ is the expected detector signal for the standard star through the $B$ bandpass,
+$C^{(0)}_B$ is the expected detector signal for the fundamental standard star through the $B$ bandpass,
 $C_V$ is the expected detector signal for the target star through the $V$ bandpass (defined by \eqref{eq:counts} but using the $V$-band transmission function $R_V(\lambda)$), and
-$C^{(0)}_V$ is the expected detector signal for the standard star through the $V$ bandpass.
+$C^{(0)}_V$ is the expected detector signal for the fundamental standard star through the $V$ bandpass.
 Expression \eqref{eq:color} shows that the color index is related to the ratio of the two signals through the two bandpasses, relative to that same ratio for the standard star.
 
 It is important in astronomical tradition that color indices are always defined with the shorter-wavelength bandpass first (positive) and the longer-wavelength bandpass second (negative).
@@ -307,9 +341,9 @@ It is worth noting, however, that there can be ambiguous cases, such as when the
 But whenever it is unambiguous, in order to avoid confusion, the color index should always be defined as the shorter-wavelength bandpass magnitude minus the longer-wavelength bandpass magnitude.
 
 The important consequences of these definitions (and the bandpass order convention) are as follows:
-If your target star is ``redder'' than the standard source in the pair of bandpasses $R_1(\lambda)$ and $R_2(\lambda)$---meaning that if it delivers a larger relative signal (relative to the standard star) in the longer-wavelength bandpass than it does in shorter-wavelength bandpass, then it will have a positive color index.
+If your target star is ``redder'' than the fundamental standard star in the pair of bandpasses $R_1(\lambda)$ and $R_2(\lambda)$---meaning that if it delivers a larger relative signal (relative to the standard star) in the longer-wavelength bandpass than it does in shorter-wavelength bandpass, then it will have a positive color index.
 The color gets larger as the target star gets redder (in this very specific sense of ``redder'').
-If the color index is zero, the target star is consistent with being identical in spectral shape to the standard star, given your device and the chosen pair of bandpasses.
+If the color index is zero, the target star is consistent with being identical in spectral shape to the fundamental standard star, given your device and the chosen pair of bandpasses.
 If the color index is negative, the target star is bluer than the standard.
 
 \section{Distance modulus and apparent magnitude}
@@ -317,17 +351,17 @@ If the color index is negative, the target star is bluer than the standard.
 I have emphasized, above, that magnitudes and colors are \emph{apparent} properties of the star.
 That means that---if you want to predict them or interpret them---your expectations don't only depend on the intrinsic, local, physical properties of the target star;
 they also depend on the distance to the star (and, below, we will find that they depend on interstellar attenuation, and even redshift, when things are moving fast).
-In this \sectionname{}, we will begin with the simplifying assumption that the interstellar attenuation and the redshift of the target star are both negligible.
+This \sectionname{} will begin with the simplifying assumption that the interstellar attenuation and the redshift of the target star are both negligible.
 
 Historically, because it was so important to the astronomical community that magnitudes be \emph{relative} to a standard star, the traditional magnitude-related definition of luminosity is also constructed to be technically relative:
 The \emph{absolute magnitude} of a star is defined to be the counterfactual magnitude it \emph{would have had} if the star had been situated $10\,\pc$ from the Solar System (or really the observer).\footnote{%
 The parsec ($1\,\pc$) is a parallax arcsecond or about $206265\,\au$
 The absolute-magnitude distance of $10\,\pc$ is about $3.086\times 10^{17}\,\m$.
 It corresponds to an Earth-orbit astrometric parallax of of $0.1\,\arcsec$.}
-History is not at stake in this \documentname, but historically this definition comes from the fact that the bright star Vega ($\alpha$~Lyrae) is about $10\,\pc$ away, and Vega was the traditional standard star of the standard photometric bandpasses.\footnote{%
+History is not at stake in this \documentname, but historically this definition comes from the fact that the bright star Vega ($\alpha$~Lyrae) is about $10\,\pc$ away, and Vega was the traditional standard star of the consensus photometric bandpasses.\footnote{%
 Vega is now thought to be at a distance of about $8\,\pc$, but the magnitude system is established and the $10\,\pc$ definition is considered immutable.
 But of course this shows the arbitrariness of trying to make an intrinsic luminosity system that is relative:
-As your beliefs about the distance to the standard star change, do you update the definition of the absolute magnitude, or do you live with the fact that the standard star no longer has an absolute magnitude of zero?
+As your beliefs about the distance to the fundamental standard star change, do you update the definition of the absolute magnitude, or do you live with the fact that the fundamental standard star no longer has an absolute magnitude of zero?
 Our community has chosen the latter.
 In a Vega-relative photometric system, Vega has an apparent magnitude of zero (by definition), but an absolute magnitude slightly greater than zero (because it is closer to us than $10\,\pc$).}
 The absolute magnitude is a measure of the intrinsic luminosity of the target star (as opposed to the apparent brightness) because if all the stars were at the same distance from us (and unaffected by interstellar attenuation), their relative brightnesses would be in proportion to their intrinsic luminosities.
@@ -346,8 +380,8 @@ The distance-modulus expression \eqref{eq:DM} invoves a $+5$ and not a $-2.5$ be
 The consequences of these definitions are as follows:
 The distance modulus is measured in the same units as magnitudes, and it increases with distance.
 $DM=0$ at $D=10\,\pc$, and $DM=10$ at $D=1\,\kpc$ (for example).
-The absolute magnitude $M_b$ of the target star through a transmission function $R_b(\lambda)$ is near zero if its intrinsic luminosity is similar to the intrinsic luminosity of the standard star, as measured by photon luminosity in the bandpass.
-The absolute magnitude is positive if the target star---placed counterfactually at a distance of $10\,\pc$---would be fainter than the standard star, and negative if the target star would be brighter.
+The absolute magnitude $M_b$ of the target star through a transmission function $R_b(\lambda)$ is near zero if its intrinsic luminosity is similar to the intrinsic luminosity of the fundamental standard star, as measured by photon luminosity in the bandpass.
+The absolute magnitude is positive if the target star---placed counterfactually at a distance of $10\,\pc$---would be fainter than the fundamental standard star, and negative if the target star would be brighter.
 
 One absurdity of cosmology is that absolute magnitudes are often used for cosmologically distant sources like quasars and galaxies, which could never be observed from a distance of $10\,\pc$---they are far, far larger in size than $10\,\pc$!
 But the numerical definition of the distance modulus works for even enormous distances, so absolute magnitudes can be defined for extremely large, luminous sources, even if they are absurd when thought of as being counterfactually observed at a distance of $10\,\pc$.
@@ -380,10 +414,10 @@ The bolometric luminosity can be computed if you know the distance $D$ to the st
 \end{align}
 where $L_\lambda(\lambda)$ is the spectral luminosity density (the luminosity equivalent of the spectral flux density).
 In general you can only know this function $L_\lambda(\lambda)$ with a theoretical model of a stellar photosphere, coupled to a model of a stellar interior; it is not a direct observable.
-This means that the bolometric absolute magnitudes and bolometric corrections we are about to define are epistemologically weaker than even absolute magnitudes, which are epistemologically weaker than apparent magnitudes.
+This means that bolometric absolute magnitudes and bolometric corrections are epistemologically weaker than even absolute magnitudes, which are themselves epistemologically weaker than apparent magnitudes.
 Absolute bolometric magnitudes and bolometric corrections require physical models of stars for their estimation.
 
-HOGG: THAT SAID, CONSIDER (that is, respond to) GIZIS COMMENT HERE.
+HOGG: THAT SAID, CONSIDER (that is, respond to) GIZIS COMMENT HERE re observing all the SED.
 
 The absolute bolometric magnitude $M_\bol$ of a star of bolometric luminosity $L$ is defined by
 \begin{align}
@@ -391,7 +425,7 @@ The absolute bolometric magnitude $M_\bol$ of a star of bolometric luminosity $L
     L^{(0)} &= 4\pi\,D_{(0)}^2\int f^{(0)}_\lambda(\lambda)\,\dd\lambda \\
             &= \int L^{(0)}_\lambda(\lambda)\,\dd\lambda ~,
 \end{align}
-where $L^{(0)}$ is the bolometric luminosity of the standard star.
+where $L^{(0)}$ is the bolometric luminosity of the fundamental standard star.
 For comparison of data to theoretical models of stars, it is useful often to compare them in terms of their bolometric luminosities, or their absolute bolometric magnitudes.
 These are more theoretically interpretable than their absolute magnitudes $M_b$ in bandpass $R_b(\lambda)$.
 Thus it was natural for astronomers to define a bolometric correction $BC_b$ which converts between the two:
@@ -400,7 +434,7 @@ Thus it was natural for astronomers to define a bolometric correction $BC_b$ whi
     m_b &= M_\bol - BC_b + DM ~,
 \end{align}
 where again I have assumed that interstellar attenuation is negligible.
-The sign of the bolometric correction was defined this way, which (in our humble opinion) is wrong,\footnote{All other corrections have the sign convention that the apparent magnitude is found by adding in the correction to the absolute quantity.} but it is set now.
+The sign of the bolometric correction was defined this way, which (in my humble opinion) is wrong,\footnote{All other corrections have the sign convention that the apparent magnitude is found by adding in the correction to the absolute quantity.} but it is set now.
 
 HOGG: Comment on the mixing of energy and photon integrations in \eqref{eq:BC}. That sucks!
 
@@ -408,43 +442,43 @@ HOGG: Comment on the obscure point that, given these definitions, the Vega-relat
 
 KATIE: PLEASE CHECK THIS PARAGRAPH.
 The consequences of these definitions are as follows:
-If a star has a bolometric luminosity greater than the standard, it will have a negative absolute bolometric magnitude; if it has a smaller bolometric luminosity it will have a positive absolute bolometric magnitude.
+If a star has a bolometric luminosity greater than the fundamental standard, it will have a negative absolute bolometric magnitude; if it has a smaller bolometric luminosity it will have a positive absolute bolometric magnitude.
 The bolometric correction is a bit harder to reason about.
 The bolometric correction can be positive or negative.
 If the stars are close to being black-bodies, the rough expectations are as follows:
-The target star will have a vanishing bolometric correction if the star has the same spectral shape as the standard star, or if the bandpass $R_b(\lambda)$ is beautifully and coincidentally centered on some (slightly hard to write down) natural wavelength related to the peaks in the spectral density coming from the target star and the standard star.
-The target star will have a positive bolometric correction if it is redder (cooler) than the standard star and it is being observed through a bandpass that is centered on wavelengths longer than where the standard-star spectral density peaks.
-Alternatively, the target star can also have a positive bolometric correction if it is bluer (hotter) than the standard star and it is being observed through a bandpass that is centered on wavelengths shorter than where the standard-star spectral density peaks.
+The target star will have a vanishing bolometric correction if the star has the same spectral shape as the fundamental standard star, or if the bandpass $R_b(\lambda)$ is beautifully and coincidentally centered on some (slightly hard to write down) natural wavelength related to the peaks in the spectral density coming from the target star and the fundamental standard star.
+The target star will have a positive bolometric correction if it is redder (cooler) than the fundamental standard star and it is being observed through a bandpass that is centered on wavelengths longer than where the standard-star spectral density peaks.
+Alternatively, the target star can also have a positive bolometric correction if it is bluer (hotter) than the fundamental standard star and it is being observed through a bandpass that is centered on wavelengths shorter than where the standard-star spectral density peaks.
 The target star will have a negative bolometric correction in the other situations (hotter target and bandpass at longer wavelengths or cooler target and bandpass at shorter wavelengths).
 There are common misconceptions about the sign of the bolometric correction, but that's not surprising, since these conditions are non-trivial.
 
-The Sun is the most well-understood star in the Universe (by humans, anyway), so it is common to reference bolometric quantities to the Sun instead, not to the standard star Vega (or other fundamental standard).
+The Sun is the most well-understood star in the Universe (by humans, anyway), so it is common to reference bolometric quantities to the Sun instead, not to the fundamental standard star Vega.
 In this case the absolute bolometric magnitude itself becomes a sum of two terms
 \begin{align}
     M_\bol &= M_{\bol,\odot} - 2.5\,\logten \frac{L}{L_\odot}~,
 \end{align}
 where $M_{\bol,\odot}$ is the absolute bolometric magnitude of the Sun, and the second term is like a bolometric absolute magnitude but referenced to the Sun instead of the fundamental standard.\footnote{%
-Although the Sun and Vega are about as well understood as stars can be, theorists are not always on the same page with regard to the Vega-relative Solar bolometric magnitude. It is important enough to astrophysical practice that the IAU adopted a reference value with resolution 2015.B2 to make the literature more definite. HOGG CITE}% HOGG CITE - IAU definition of a standard, IAU 2015.B3 (https://arxiv.org/abs/1510.06262)
+Although the Sun and Vega are about as well understood as stars can be, theorists are not always on the same page with regard to the Vega-relative Solar bolometric magnitude. It is important enough to astrophysical practice that the IAU adopted a reference value with resolution 2015.B2 to make the literature more definite \cite{2015b2}.}
 
-HOGG: Where to say this? There are also apparent bolometric magnitudes. They are defined how? And, unlike the absolute bolometric magnitudes, they can (in principle) be measured without a theoretical physical model for any star. But in practice they can't be, really.
+HOGG: Where to say this? There are also apparent bolometric magnitudes. They are defined how?
 
 \section{Interstellar extinction and color excess}\label{sec:extinction}
 
-At various points above we have assumed that there is no significant interstellar attenuation.
+At various points above it has been assumed that there is no significant interstellar attenuation.
 But of course for the majority of stars in our Galaxy, this is not true!
 Intervening interstellar dust (and gas, but mainly dust\footnote{Astronomers call this interstellar material ``dust'' but it is really a range of different kinds of material including hydrocarbons and other complex molecules, plus particles of solid-state materials in a wide range of sizes. It might be better called ``sand and smoke''? It is absolutely not at all what general relativists call ``dust''! And it is also not what you call dust when you sweep your floors (is that really mainly dead skin cells?).}) absorbs light from the stars, and preferentially at shorter wavelengths.
 For this reason, dust not only attenuates stellar brightnesses but also shifts stellar colors to the red.
 
-Above in \eqref{eq:L_lambda} we defined the relationship between the spectral flux density $f_\lambda(\lambda)$ and the spectral luminosity density $L_\lambda(\lambda)$ in the context that there is no dust attenuation.
+Above in \eqref{eq:L_lambda} the relationship between the spectral flux density $f_\lambda(\lambda)$ and the spectral luminosity density $L_\lambda(\lambda)$ was defined in the context that there is no dust attenuation.
 If there is intervening interstellar dust, and that dust, at each wavelength $\lambda$, attenuates\footnote{%
 The interstellar dust attenuates the light in the sense that it absorbs it and then re-radiates it at longer wavelengths, distributed over a larger solid angle on the sky than that subtended by the star.
-The full accounting for the radiative processes involved is way beyond our scope in this \documentname.}
+The full accounting for the radiative processes involved is way beyond the scope of this \documentname.}
 a fraction of the light specified by some optical depth $\tau(\lambda)$, then the generalization of this relationship is
 \begin{align}
     f_\lambda(\lambda) &= \frac{1}{4\pi\,D^2}\,L_\lambda(\lambda)\,\exp\left(-\tau(\lambda)\right)\\
     A(\lambda) &\equiv 1.086\,\tau(\lambda)~,
 \end{align}
-where we have defined a function $A(\lambda)$ that is very similar to the optical depth but the factor of 1.086 converts from natural-log units to magnitude units (because $2.5\logten(e)=1.086$ HOGG IS THIS ARGUMENT CORRECT?).
+where the function $A(\lambda)$ is very similar to the optical depth but with a factor of 1.086 that converts from natural-log units to magnitude units (because $2.5\logten(e)=1.086$ HOGG IS THIS ARGUMENT CORRECT?).
 
 All this means that if the absolute bolometric magnitude of the target star is based on an integral of its spectral luminosity density $L_\lambda(\lambda)$, and the spectral flux density $f_\lambda(\lambda)$ at the top of the atmosphere depends on both the distance to the star and the interstellar attenuation, the relationship between apparent magnitude $m_b$ and absolute magnitude $M_b$ or absolute bolometric magnitude $M_\bol$ must be further complexified to
 \begin{align}
@@ -456,7 +490,7 @@ All this means that if the absolute bolometric magnitude of the target star is b
     \end{align}
 where $A(b)\geq 0$ is the \emph{extinction}, or a magnitude-units quantity expressing the amount of interstellar dust attenuation,
 and $\chi_b,\chi_{bA}$ are hypothetical photon-counting signals you would get if you could photon-count the source with and without dust attenuation.
-Recall (from \secref{sec:mag}) that we are assuming that your device is a photon-counting device.
+Recall (from \secref{sec:mag}) the assumption that your device is a photon-counting device.
 I apologize that the notation for the infinitesimal-wavelength extinction $A(\lambda)$ is so similar to the finite-bandpass extinction $A(R)$, but it's not my fault!
 
 These relationships---\eqref{eq:mA} and \eqref{eq:A}---constitute a nice definition for the extinction $A(R)$, but it is worth noting that \emph{you need to know a lot of things} in order to compute it accurately:
@@ -469,7 +503,7 @@ And indeed, much extinction work is done in this limit (and takes on correspondi
 In general the optical-depth and extinction functions $\tau(\lambda)$ and $A(\lambda)$ are larger at shorter wavelengths.
 Interstellar dust preferentially absorbs light at shorter wavelengths.
 This means that the introduction of interstellar dust tends to make sources redder, or increases the numerical value of any color indices.
-If we specify this to the $B$ and $V$ photometric bands, for specificity, we can express the color index $B-V$ in terms of the relationship $\eqref{eq:mA}$
+If this is specified to the $B$ and $V$ photometric bands---as it often is---the color index $B-V$ can be expressed in terms of the relationship $\eqref{eq:mA}$
 \begin{align}
     B - V &= BC_V - BC_B + A(B) - A(V)\\
           &= (B - V)_0 + E(B - V)\\
@@ -507,10 +541,10 @@ HOGG: Note that when the bandpasses are narrow, $A()$ and $E()$ increase linearl
 
 I mentioned above the counterfactual absurdity in cosmology that often enormous and cosmologically distant objects are described in terms of absolute magnitudes.
 If that isn't bad enough:
-Cosmologically distant objects are usually redshifted with respect to us, such that the wavelengths of the light that fall into our transmission function $R_b(\lambda)$ here in the Solar System were shorter when they were emitted in the rest frame of the target.
+Cosmologically distant objects are usually redshifted with respect to us, such that the wavelengths of the light that fall into the transmission function $R_b(\lambda)$ here in the Solar System were shorter when they were emitted in the rest frame of the target.
 This leads to another kind of correction, coming from this relativistic Doppler shift.
 
-We have discussed this in great detail elsewhere \cite{kcorrect}, but briefly, we define a correction $K(z)$ such that
+I have discussed this in great detail elsewhere \cite{kcorrect}, but briefly, it is traditional to define a correction $K(z)$ such that
 \begin{align}
     m_b &= M_b + DM(z) + A(R) + K(z)\label{eq:K}\\
     K &= -2.5\logten\frac{\xi_{bz}}{\xi_{b0}}\\
@@ -529,8 +563,8 @@ It is negative and grows more negative with redshift if the target is redder tha
 HOGG: AM I WRONG HERE?
 
 In some very clever projects, cosmologists use many bandpasses that cover a wide range of wavelength, and then the Doppler shift brings light at some rest-frame wavelength $\lambda$ from one observer-frame bandpass to another as redshift increases.
-Thus---unlike how we have written the definition \eqref{eq:K}---the bandpass in which the apparent magnitude is measured is often different from the bandpass in which the absolute magnitude is inferred. Then the $K(z)$ term gets more complex.
-That is out of scope here, but it is precisely the scope of our previous writing on this subject \cite{kcorrect}.
+Thus---unlike how the definition \eqref{eq:K} is written---the bandpass in which the apparent magnitude is measured is often different from the bandpass in which the absolute magnitude is inferred. Then the $K(z)$ term gets more complex.
+That is out of scope here, but it is precisely the scope of my previous writing on this subject \cite{kcorrect}.
 I recommend that as a jumping-off point if you are working on such projects.
 
 HOGG: Amusing point that redshifting doesn't necessarily make things redder! It depends on the detailed shape of the spectrum...
@@ -541,11 +575,12 @@ Everything above has been about the \emph{theoretical expectations} for magnitud
 But the whole original point of the magnitude system is that you can \emph{measure} apparent magnitudes without knowing any of those things.
 How do these measurements work in practice?
 
-The first comment to make is that it is rare now to actually directly compare your target star with the standard star.
+The first comment to make is that it is rare now to actually directly compare your target star directly with the fundamental standard star.
 That is, it is rare to point the same instrument and telescope at the target star and at the zeroth magnitude Vega.
 This is because, in general, contemporary science targets are faint, and detectors don't have the dynamic range to observe the target star and Vega in the same mode.
 So in practice the usual approach is to calibrate the science target to a set of fainter secondary standards, which have been calibrated relative to the standard (see, for example, \cite{landolt}).
-That's great!
+That's great.
+We illustrated explicitly how calibrated secondary standards are used to estimate magnitudes in \eqref{eq:secondary} in \secref{sec:mag}.
 
 HOGG Note here about tracking airmass changes and correcting both things to standard airmass.
 
@@ -579,18 +614,18 @@ It is not!
 If there is one important take-away from this \documentname, it is that it is important to perform the integrals carefully and with the correct photon-counting ``kernel'' as it were.
 And, in this context, it is important to see the transmission curve $R_b(\lambda)$ as the expected contribution to the detector signal from a \emph{photon} at the top of the atmosphere.
 
-For an example of how upsetting these integral kernels are, consider the expressions for the bolometric magnitudes in \secref{sec:bc}:
+For an example of how upsetting these integral kernels are, consider the expressions for the bolometric magnitudes in \secref{sec:bc}.
 These expressions mix up logarithms of ratios of integrals that do and don't have the energy-per-photon factor.
 That's not good, intellectually.
-But it's required, unfortunately, because most kinds of optical detectors are photon-counting devices, and yet most kinds of theory predict integrated energy outputs of stars, not integrated \emph{photon} outputs.
+But it's required, unfortunately, because most kinds of optical detectors are photon-counting devices, and yet most kinds of theories predict integrated energy outputs of stars, not integrated \emph{photon} outputs.
 
 On a related side note:
 If you actually do these expectation integrals (on a computer, say), you will find that results can depend on the integration scheme and stepsize.
 Stellar spectra are highly featured, and the features can be narrow and sharp.
+Integrate with care.
 
-HOGG Comment on effective wavelengths of bandpasses. Mainly useful for plotting. But dishonest there too!
-
-Related to all this on effective wavelengths, it is generally true that the analysis or prediction or interpretation of apparent magnitudes gets far simpler when \emph{bandpasses get narrow}, and gets far more complicated when \emph{bandpasses get broader}.
+As noted above (\secref{sec:transmission}), it is not usually a good idea to think of a wide photometric bandpass as having an ``effective wavelength'' or center, as any such measure depends strongly on the spectrum of the target star (and also the standard star).
+Related to this, it is generally true that the analysis or prediction or interpretation of apparent magnitudes (and related quantities like color indices) gets far simpler when \emph{bandpasses get narrow}, and gets far more complicated when \emph{bandpasses get broader}.
 The concept of the effective wavelength of a bandpass is more dependent on the detailed stellar spectrum the broader the bandpass, and is more uniform across stellar spectra the narrower the bandpass.
 For example, the effect of dust attenuation is more dependent on the detailed stellar spectrum the broader the bandpass, and is more uniform across stellar spectra the narrower the bandpass.
 HOGG: EXPLICITLY Point to relevant dust equation for $A(\lambda)$.
@@ -603,23 +638,24 @@ HOGG Comment on airmass, the atmosphere, the effects on bandpasses, especially i
 Maybe also mention (maybe in a footnote) the dependence of the SDSS PT bandpasses on humidity.
 No two nights, no two pixels, no two observations, no two instruments have exactly the same bandpass. That sux but that's reality.
 
-HOGG: WEAKEN THE IMPLIED CRITICISMS HERE.
 In everything above, I considered only the magnitudes of point sources (or compact sources anyway).
-Isn't this odd, since really it is the \emph{intensity} that is the fundamental quantity in electromagnetism?\footnote{The intensity is energy per wavelength per time per area per solid angle. It is related to the phase-space density of photons, which is what is preserved along geodesic trajectories in a transparent Universe. Fluxes are not preserved; see, for example, gravitational lensing magnifications \cite{blandford}.}
+Isn't this odd, since really it is the \emph{intensity} that is the fundamental quantity in electromagnetism?\footnote{The intensity is energy per wavelength per time per area per solid angle. It is related to the phase-space density of photons, which is what is preserved along geodesic trajectories in a transparent Universe. Fluxes are not what's preserved; see, for example, gravitational lensing magnifications \cite{lensing}.}
 Of course astronomers do measure intensities very often---optical astronomers often call these ``surface brightnesses''---and they often use the same techniques described above, but with modifications to account for the distribution of the light in the detector image plane.
 The only comment I will make about that is that optical astronomers often use units of ``magnitudes per square arcsecond'' for such measurements, which is an abomination and ought to be avoided.
 After all, magnitudes don't increase linearly with solid angle!
-In general it is probably a bad idea to tie an intensity measurement (from a bright patch in your imaging) to a flux measurement (from an unresolved secondary standard star in your imaging), because these things have very different units.
-One indication of danger is that there are conceptual puzzles in such measurements involving the point-spread function, pixel areas, and flat-field maps \cite{bernstein}.
+In general there are issues that arise when one ties an intensity measurement (from a bright patch in your imaging, say) to a flux measurement (from an unresolved secondary standard star in your imaging), because these things have very different units and observational footprints.
+One indication of danger is that there are conceptual puzzles and challenges with such measurements involving the point-spread function, pixel areas, and flat-field maps (the reader is referred to, for example, \cite{bernstein} for examples of the challenges).
 That said, I don't have a worked-out alternative recommendation at present.
 
 In the long run, if we want to make extremely repeatable photometric measurements from the ground, and if we want those measurements to be tied to an accurately known and stable standard source, it might make sense to \emph{fly} a standard star.
 That is, it might be a good idea to put a stable black-body (or set of black-bodies) onto a spacecraft and place it onto some useful orbit.
-Such things have been proposed \cite{wacky}, and indeed the extremely precise \textsl{FIRAS} HOGG CHECK \cite{firas} measurements of the cosmic microwave background intensity---which are perhaps the most accurate astronomical measurements of intensity ever made---were made by making on-board comparisons to an on-board standard intensity source.\footnote{In this sentence and the next I am intentionally using the word ``accurate''; I make a strong distinction between precision and accuracy.}
+Such things have been proposed \cite{wacky}, and indeed the extremely precise \textsl{FIRAS} \cite{firas} measurements of the cosmic microwave background intensity---which are perhaps the most accurate astronomical measurements of intensity ever made---were made by making on-board comparisons to an on-board standard intensity source \cite{firascalibrator}.\footnote{In this sentence and the next I am intentionally using the word ``accurate''; I make a strong distinction between precision and accuracy.}
 If astronomical photometry has a high-accuracy future---and not just a high-precision future---something of this nature might be required.
 
+\begin{wider}
 \bibliographystyle{plain}
 \raggedright
 \bibliography{mags}
+\end{wider}
 
 \end{document}
