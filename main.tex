@@ -12,16 +12,12 @@
 
 % to-do items:
 % ------------
-% - Maybe talk about intensity very early on?
-%.- Be sure to talk about the absurdity of putting a galaxy at 10 pc!!
 % - Discuss differences between intensive and extensive quantities. Which are which, and where do they appear?
-% - The bolometric correction is maybe not defined in the AB magnitude system??
+% - The bolometric correction is maybe not defined in the AB magnitude system?? See huge twitter blow-up.
 % - Maybe mention and cite the Oke and Gunn work on calibrating Vega?? The blackbody source??
 % - Maybe cite Landolt and Aaronson and others on secondary standards?
 % - Make sure we cite uber-calibration and self-calibration in the practice section?
-% - Work through Rix comments from 2022-02-09-ish (NYU email).
 % - In the infrared, Vega has a debris disk?? Gizis mentions this.
-% - Do I clearly say that the SAME piece of glass in front of a CCD and a bolometer leads to different bandpasses? This should be in the transmission-function section.
 
 % Aaron's things to work into the text:
 % -------------------------------------
@@ -80,6 +76,7 @@
 
 % Math macros
 \newcommand{\dd}{\mathrm{d}}
+\newcommand{\e}{\mathrm{e}}
 \newcommand{\bol}{\text{bol}}
 \newcommand{\eff}{\text{eff}}
 \DeclareMathOperator{\logten}{log_{10}}
@@ -113,7 +110,9 @@ Gerry Neugebauer (deceased),
 Bev Oke (deceased),
 Adrian Price-Whelan (Flatiron),
 Hans-Walter Rix (MPIA),
-and the Astronomical Data Group at the Flatiron Institute, for valuable discussions of these matters.}
+and the Astronomical Data Group at the Flatiron Institute
+for valuable discussions of these matters over the years.
+I dedicate this \documentname{} to the memories of Arlo Landolt and Gerry Neugebauer, both of whom were cherished colleagues who devoted much of their careers to improving the precision and accuracy of fundamental astronomical measurements.}
 {\footnotesize\par\noindent%
   \textsl{Center for Cosmology and Particle Physics, Department of Physics, New York University}\\
   \textsl{Max-Planck-Institut f\"ur Astronomie, Heidelberg}\\
@@ -314,10 +313,12 @@ Much of astronomy is the study of star (or galaxy or quasar or supernova or \etc
 If you only have imaging devices at your disposal---which make photometric measurements---and not a spectrograph, then your spectral information comes from comparing the brightness of the object in different bandpasses, each of which has different wavelength coverage.
 And, if you accept the relative properties of the magnitude system (that is, that all measurements are made relative to a standard star) then the spectral information delivered by multi-band photometry is, fundamentally, information about \emph{differences in the amplitude and shape} between the spectrum of your target star and the spectrum of the standard star.
 
+% HOGG: Should we have a comment on the naming of UBVRIJHK?
+
 The classical optical bandpasses are maybe $U,B,V,R,I,J,H,K$ spanning from the ultraviolet cutoff of the atmosphere to the longest wavelengths practicable with array detectors in windows of atmospheric transparency in the infrared.\footnote{%
 Sometimes people object to my saying that $J, H, K$, which are in the near infrared, are ``optical'' bandpasses. But my position (inherited from Gerry Neugebauer, a founder of infrared astronomy), is that ``optical'' is the name of a set of techniques, while ``ultraviolet'', ``visible'', and ``infrared'' are electromagnetic wavelength ranges. So the \textsl{Spitzer Space Telescope} \cite{spitzer}, for example, was an optical instrument observing in the infrared.}
 There are lots of other bandpasses in use, and from space the wavelength range is enormously expanded from the far-ultraviolet through the mid-infrared.\footnote{%
-HOGG: I am prejudiced against gamma-ray, X-ray, and submillimeter here. Radio never used these definitions.}
+I am prejudiced against gamma-ray, X-ray, and submillimeter here. Radio astronomy never really used these definitions.}
 For each of these bandpasses, if you want to interpret theoretically the spectral information it provides, it is critical to have some estimate of the transmission function $R_b(\lambda)$, as I discussed in \secref{sec:mag}.
 
 A color index---or more usually just a ``color'' these days---is a difference of two magnitudes, measured through two different bandpasses.
@@ -346,7 +347,7 @@ The color gets larger as the target star gets redder (in this very specific sens
 If the color index is zero, the target star is consistent with being identical in spectral shape to the fundamental standard star, given your device and the chosen pair of bandpasses.
 If the color index is negative, the target star is bluer than the standard.
 
-\section{Distance modulus and apparent magnitude}
+\section{Distance modulus and absolute magnitude}
 
 I have emphasized, above, that magnitudes and colors are \emph{apparent} properties of the star.
 That means that---if you want to predict them or interpret them---your expectations don't only depend on the intrinsic, local, physical properties of the target star;
@@ -407,10 +408,13 @@ However, if a star did have a well defined bolometric luminosity $L$ and photosp
     L &= 4\pi\,r^2\,\sigma\,T_\eff^4 ~,
 \end{align}
 where $\sigma$ is the Stefan-Boltzmann constant.
-The bolometric luminosity can be computed if you know the distance $D$ to the star and the full spectral flux density $f_\lambda(\lambda)$:
+The bolometric luminosity can be computed if you know the distance $D$ to the star\footnote{%
+Oddly the distance $D$ here is not precisely the luminosity distance, but the relevant distinction is pedantic when looking at nearby stars moving at non-relativistic speeds.
+The bolometric corrections in question in this \sectionname{} are never (or rarely) used in cosmological or relativistic contexts.}
+and the full spectral flux density $f_\lambda(\lambda)$:
 \begin{align}
     L &= \int L_\lambda(\lambda)\,\dd\lambda\label{eq:L}\\
-    L_\lambda(\lambda) &= 4\pi\,f_\lambda(\lambda)\label{eq:L_lambda}~,
+    L_\lambda(\lambda) &= 4\pi\,D^2\,f_\lambda(\lambda)\label{eq:L_lambda}~,
 \end{align}
 where $L_\lambda(\lambda)$ is the spectral luminosity density (the luminosity equivalent of the spectral flux density).
 In general you can only know this function $L_\lambda(\lambda)$ with a theoretical model of a stellar photosphere, coupled to a model of a stellar interior; it is not a direct observable.
@@ -436,11 +440,13 @@ Thus it was natural for astronomers to define a bolometric correction $BC_b$ whi
 where again I have assumed that interstellar attenuation is negligible.
 The sign of the bolometric correction was defined this way, which (in my humble opinion) is wrong,\footnote{All other corrections have the sign convention that the apparent magnitude is found by adding in the correction to the absolute quantity.} but it is set now.
 
+HOGG: RIX SAY: This doesn't make it obvious that the BC is a distance-independent quantity!
+
 HOGG: Comment on the mixing of energy and photon integrations in \eqref{eq:BC}. That sucks!
 
 HOGG: Comment on the obscure point that, given these definitions, the Vega-relative BC for Vega is not zero!! And confirm that this is indeed true??
 
-KATIE: PLEASE CHECK THIS PARAGRAPH.
+KATIE \& HOGG: PLEASE CHECK THIS PARAGRAPH.
 The consequences of these definitions are as follows:
 If a star has a bolometric luminosity greater than the fundamental standard, it will have a negative absolute bolometric magnitude; if it has a smaller bolometric luminosity it will have a positive absolute bolometric magnitude.
 The bolometric correction is a bit harder to reason about.
@@ -466,19 +472,19 @@ HOGG: Where to say this? There are also apparent bolometric magnitudes. They are
 
 At various points above it has been assumed that there is no significant interstellar attenuation.
 But of course for the majority of stars in our Galaxy, this is not true!
-Intervening interstellar dust (and gas, but mainly dust\footnote{Astronomers call this interstellar material ``dust'' but it is really a range of different kinds of material including hydrocarbons and other complex molecules, plus particles of solid-state materials in a wide range of sizes. It might be better called ``sand and smoke''? It is absolutely not at all what general relativists call ``dust''! And it is also not what you call dust when you sweep your floors (is that really mainly dead skin cells?).}) absorbs light from the stars, and preferentially at shorter wavelengths.
+Intervening interstellar dust (and gas, but mainly dust\footnote{Astronomers call this interstellar material ``dust'' but it is really a range of different kinds of material including graphite, silicates, hydrocarbons, and other complex molecules, plus particles of solid-state materials in a wide range of sizes. It might be better called ``sand and smoke''? It is absolutely not at all what general relativists call ``dust''! And it is also not what you call dust when you sweep your floors (is that really mainly dead skin cells?).}) absorbs light from the stars, and preferentially at shorter wavelengths.
 For this reason, dust not only attenuates stellar brightnesses but also shifts stellar colors to the red.
 
 Above in \eqref{eq:L_lambda} the relationship between the spectral flux density $f_\lambda(\lambda)$ and the spectral luminosity density $L_\lambda(\lambda)$ was defined in the context that there is no dust attenuation.
 If there is intervening interstellar dust, and that dust, at each wavelength $\lambda$, attenuates\footnote{%
-The interstellar dust attenuates the light in the sense that it absorbs it and then re-radiates it at longer wavelengths, distributed over a larger solid angle on the sky than that subtended by the star.
+The interstellar dust attenuates the light in the sense that it scatters some of the light out of the line of sight and absorbs some of the light and re-radiates it at longer wavelengths, distributed over a larger solid angle on the sky than that subtended by the star.
 The full accounting for the radiative processes involved is way beyond the scope of this \documentname.}
 a fraction of the light specified by some optical depth $\tau(\lambda)$, then the generalization of this relationship is
 \begin{align}
     f_\lambda(\lambda) &= \frac{1}{4\pi\,D^2}\,L_\lambda(\lambda)\,\exp\left(-\tau(\lambda)\right)\\
-    A(\lambda) &\equiv 1.086\,\tau(\lambda)~,
+    A(\lambda) &\approx 1.086\,\tau(\lambda)~,
 \end{align}
-where the function $A(\lambda)$ is very similar to the optical depth but with a factor of 1.086 that converts from natural-log units to magnitude units (because $2.5\logten(e)=1.086$ HOGG IS THIS ARGUMENT CORRECT?).
+where the function $A(\lambda)$ is very similar to the optical depth but with a factor of 1.086 that converts from natural-log units to magnitude units (because $2.5\logten\e\approx 1.086$).
 
 All this means that if the absolute bolometric magnitude of the target star is based on an integral of its spectral luminosity density $L_\lambda(\lambda)$, and the spectral flux density $f_\lambda(\lambda)$ at the top of the atmosphere depends on both the distance to the star and the interstellar attenuation, the relationship between apparent magnitude $m_b$ and absolute magnitude $M_b$ or absolute bolometric magnitude $M_\bol$ must be further complexified to
 \begin{align}
@@ -500,7 +506,9 @@ That said, things get simpler as the bandpass $R_b(\lambda)$ gets narrower in wa
 As $R_b(\lambda)$ becomes more concentrated around some central wavelength $\lambda_0$, $A(b)$ approaches $A(\lambda_0)$.
 And indeed, much extinction work is done in this limit (and takes on corresponding inaccuracies for very red and very blue stars).
 
-In general the optical-depth and extinction functions $\tau(\lambda)$ and $A(\lambda)$ are larger at shorter wavelengths.
+HOGG: RIX ASKS: Should we emphasize in the above paragraph: The loss of information coming from the integral over the bandpass?
+
+In general the optical-depth and extinction functions $\tau(\lambda)$ and $A(\lambda)$ are larger at shorter wavelengths (although there are exceptions near certain features).
 Interstellar dust preferentially absorbs light at shorter wavelengths.
 This means that the introduction of interstellar dust tends to make sources redder, or increases the numerical value of any color indices.
 If this is specified to the $B$ and $V$ photometric bands---as it often is---the color index $B-V$ can be expressed in terms of the relationship $\eqref{eq:mA}$
@@ -519,14 +527,14 @@ The extinctions $A(\lambda)$ and $A(R)$ are zero if there is no interstellar att
 They increase with the amount of intervening interstellar dust.
 The reddening $E(B-V)$ has the same properties---zero at zero attenuation, and increasing with increasing attenuation---and it usually will for any color index you like, provided that the color index is defined in the usual way, as the shorter-wavelength bandpass magnitude minus the longer-wavelength bandpass magnitude.
 This is because dust generally reddens a source!
-The sign might change in bandpasses that are near or span a strong feature in the dust attenuation law, such as HOGG WHAT AND CITE?
+The sign might change in bandpasses that are near or span a strong feature in the dust attenuation law, such as the 2175-angstrom bump; see, for example \cite{extinction}.
 
 Different kinds of dust---with, say, different particle size distributions---have different kinds of extinction and reddening behaviors as a function of wavelength.
-To parameterize this, it is traditional to define a dust reddening law parameter $R(V)$ (HOGG WHAT IS THIS CALLED??) as
+To parameterize this, it is traditional to define a dust reddening law parameter $R(V)$  as
 \begin{align}
     R(V) &= \frac{A(V)}{A(B) - A(V)}\label{eq:RV} ~,
 \end{align}
-which typically has values in the 2 to 3 range (HOGG CITE), and varies with environment and redshift (HOGG CITE).\footnote{%
+which typically has values in the 2 to 3 range \cite{extinction, extinction2}, and varies with environment and redshift.\footnote{%
 The reddening-law parameter $R(V)$ should not be confused with the bandpass function $R_b(\lambda)$. I apologize for the over-loaded notation, but this \documentname{} collides multiple literatures.}
 This ratio $R(V)$ was originally conceived as the slope of a ``reddening vector'' on a color--absolute-magnitude diagram; the reddening vector points in the direction in the space of $B-V$ color and absolute magnitude $M_V$ that a star would move if the amount of interstellar dust along its line of sight were increased.
 This definition \eqref{eq:RV} refers everything to the $B$ and $V$ bands, which is traditional, but not required (and it could be re-done in any bands)
@@ -567,7 +575,8 @@ Thus---unlike how the definition \eqref{eq:K} is written---the bandpass in which
 That is out of scope here, but it is precisely the scope of my previous writing on this subject \cite{kcorrect}.
 I recommend that as a jumping-off point if you are working on such projects.
 
-HOGG: Amusing point that redshifting doesn't necessarily make things redder! It depends on the detailed shape of the spectrum...
+One amusing point about the K correction and redshift is that, when similar galaxies or quasars are observed at higher and higher redshifts, the higher-redshift objects are not in general \emph{redder} than the lower-redshift objects.
+Whether objects in some class generally get redder or bluer as redshift increases depends on the detailed spectral shape of the objects in the class, the redshift ranges in question, and the particular bandpasses being used.
 
 \section{Real-world measurement}\label{sec:practice}
 
@@ -599,11 +608,13 @@ A full discussion of the noise in a measurement like this is far out of scope.
 Nowadays, the secondary standards are often not really standards at all:
 Often the calibration of new photometry or new imaging is made with respect to prior imaging of that same patch of sky, from a large survey (such as \textsl{2MASS} \cite{2mass} or \textsl{SDSS} \cite{sdss} or \textsl{PanSTARRS} \cite{panstarrs}).
 Once again, synthetic magnitudes must be created, but if the prior imaging overlaps your target-star field, you can often make the comparisons required for your apparent magnitude measurements within your science imaging itself, without taking additional calibration frames.
-That has really changed astrophysics enormously.\footnote{This point was made in multiple contributions, now lost in time, at the XXX meeting in honor of Arlo Landolt HOGG.}
+That has really changed astrophysics enormously.\footnote{This point was made in multiple contributions, now lost in time, at the meeting \textit{Landolt Standards and 21st Century Photometry} organized at Louisiana State University in 2015 by Pagnotta and Clayton in honor of Arlo Landolt.}
 
 If you want to create your own secondary standards, because, say, you need standards in a new magnitude range, or, say, you need standards that are in some particular temperature or metallicity ranges, there are a host of considerations.
 Any complete discussion of those considerations is out of scope here, but the issues include that noise sources, sky levels, and even detector properties can vary with the incident intensity of the star.
 Calibrating secondary standards many magnitudes away from the primary standard requires extremely detail-oriented work.
+
+HOGG: self-calibration paragraph here and cite \cite{ubercal}.
 
 \section{Comments and discussion}\label{sec:discussion}
 
@@ -614,7 +625,7 @@ It is not!
 If there is one important take-away from this \documentname, it is that it is important to perform the integrals carefully and with the correct photon-counting ``kernel'' as it were.
 And, in this context, it is important to see the transmission curve $R_b(\lambda)$ as the expected contribution to the detector signal from a \emph{photon} at the top of the atmosphere.
 
-For an example of how upsetting these integral kernels are, consider the expressions for the bolometric magnitudes in \secref{sec:bc}.
+For an example of how upsetting these integral kernels are, consider the expressions for the bolometric corrections in \secref{sec:bc}.
 These expressions mix up logarithms of ratios of integrals that do and don't have the energy-per-photon factor.
 That's not good, intellectually.
 But it's required, unfortunately, because most kinds of optical detectors are photon-counting devices, and yet most kinds of theories predict integrated energy outputs of stars, not integrated \emph{photon} outputs.
@@ -649,7 +660,9 @@ That said, I don't have a worked-out alternative recommendation at present.
 
 In the long run, if we want to make extremely repeatable photometric measurements from the ground, and if we want those measurements to be tied to an accurately known and stable standard source, it might make sense to \emph{fly} a standard star.
 That is, it might be a good idea to put a stable black-body (or set of black-bodies) onto a spacecraft and place it onto some useful orbit.
-Such things have been proposed \cite{wacky}, and indeed the extremely precise \textsl{FIRAS} \cite{firas} measurements of the cosmic microwave background intensity---which are perhaps the most accurate astronomical measurements of intensity ever made---were made by making on-board comparisons to an on-board standard intensity source \cite{firascalibrator}.\footnote{In this sentence and the next I am intentionally using the word ``accurate''; I make a strong distinction between precision and accuracy.}
+Such things have been proposed \cite{wacky}, and indeed the extremely precise \textsl{FIRAS} measurements \cite{firas} of the cosmic microwave background intensity---which are perhaps the most accurate\footnote{%
+In this sentence and the next I am intentionally using the word ``accurate''; I make a strong distinction between precision and accuracy.}
+astronomical measurements of intensity ever made---were made by making on-board comparisons to an on-board standard intensity source \cite{firascalibrator}.
 If astronomical photometry has a high-accuracy future---and not just a high-precision future---something of this nature might be required.
 
 \begin{wider}
