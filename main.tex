@@ -1,27 +1,13 @@
-% This document is not part of any project.
-% Copyright 2022 David W Hogg (NYU) (Flatiron).
+% Copyright 2022 David W Hogg (NYU) (MPIA) (Flatiron).
 
 % style notes:
 % ------------
 % - The object of interest is the "target" or "target star". What do we think about the word "source"? The text is a bit inconsistent here.
 % - The source is a "star". Even though I will talk about K corrections!
-% - Am I completely consistent in terminology about what I call the flux spectral density?...?
+% - Am I completely consistent in terminology about what I call the flux spectral density?...? Whoops!
 % - Is the magnitude measured THROUGH a bandpass or IN a bandpass? Through! Audit.
 % - The first time any term is introduced or defined, put it in \emph{}. Audit for this.
 % - First person is used sparingly and it is I, my not we, our.
-
-% to-do items:
-% ------------
-% - Submit it to arXiv!
-% - The bolometric correction is maybe not defined in the AB magnitude system?? See huge twitter blow-up. Really the Sun sets the bolometric scale now,
-% - Maybe cite Landolt and Aaronson and others on secondary standards?
-% - Make sure we cite uber-calibration and self-calibration in the practice section?
-
-% Aaron's things to work into the text:
-% -------------------------------------
-% - Torres https://ui.adsabs.harvard.edu/abs/2010AJ....140.1158T/abstract
-% Gaia teams arbitrary (re)definition of Vega:
-% https://gea.esac.esa.int/archive/documentation/GEDR3/Data_processing/chap_cu5pho/cu5pho_sec_photProc/cu5pho_ssec_photCal.html
 
 \documentclass[10pt]{article}
 \usepackage[utf8]{inputenc}
@@ -426,7 +412,8 @@ However, if a star \emph{did} have a well defined bolometric luminosity $L$ and 
 where $\sigma$ is the Stefan--Boltzmann constant.
 The bolometric luminosity can be computed if you know the distance $D$ to the star\footnote{%
 Oddly the distance $D$ here is not precisely the luminosity distance, but the relevant distinction is pedantic when looking at nearby stars moving at non-relativistic speeds.
-The bolometric corrections in question in this \sectionname{} are never (or rarely) used in cosmological or relativistic contexts.}
+The reason is that the luminosity distance converts between $\lambda\,f_\lambda$ and $\lambda\,L_\lambda$; if converting between $f_\lambda$ and $L_\lambda$ there is a factor of $[1+z]$ to account for the ``per wavelength'' properties of those spectral densities.
+This is pedantry, however, because the bolometric corrections in question in this \sectionname{} are never (or rarely) used in cosmological or relativistic contexts.}
 and the full spectral flux density $f_\lambda(\lambda)$:
 \begin{align}
     L &= \int L_\lambda(\lambda)\,\dd\lambda\label{eq:L}\\
