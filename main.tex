@@ -1,5 +1,11 @@
 % Copyright 2022 David W Hogg (NYU) (MPIA) (Flatiron).
 
+% to-do:
+% ------
+% - FIX ERROR at ratio chi_A/chi. And thank Sam Ward (Cambridge).
+% - Define maggies and give a reference?
+% - resubmit to arXiv
+
 % style notes:
 % ------------
 % - The object of interest is the "target" or "target star". What do we think about the word "source"? The text is a bit inconsistent here.
@@ -96,7 +102,8 @@ Bev Oke (deceased),
 Adrian Price-Whelan (Flatiron),
 Hans-Walter Rix (MPIA),
 and the Astronomical Data Group at the Flatiron Institute
-for valuable discussions of these matters over the years.
+for valuable discussions of these matters over the years,
+and Sam Ward (Cambridge) for correcting an error.
 I dedicate this to the memories of Arlo Landolt and Gerry Neugebauer, both of whom were cherished colleagues who devoted much of their careers to improving the precision and accuracy of fundamental astronomical measurements.}
 {\footnotesize\par\noindent%
   \textsl{Center for Cosmology and Particle Physics, Department of Physics, New York University}\\
@@ -503,9 +510,9 @@ All this means that if the absolute bolometric magnitude of the target star is b
 \begin{align}
     m_b &= M_b + DM + A(b)\label{eq:mA}\\
         &= M_\bol - BC_b + DM + A(b)\\
-    A(b) &= -2.5\,\logten\frac{\chi_b}{\chi_{bA}}\label{eq:A}\\
-    \chi_b &= \int \frac{L_\lambda(\lambda)}{h\,c/\lambda}\,R_b(\lambda)\,\dd\lambda\\
-    \chi_{bA} &= \int \frac{L_\lambda(\lambda)}{h\,c/\lambda}\,\exp(-\tau(\lambda))\,R_b(\lambda)\,\dd\lambda ~,
+    A(b) &= -2.5\,\logten\frac{\chi_{bA}}{\chi_{b}}\label{eq:A}\\
+    \chi_{bA} &= \int \frac{L_\lambda(\lambda)}{h\,c/\lambda}\,\exp(-\tau(\lambda))\,R_b(\lambda)\,\dd\lambda\\
+    \chi_b &= \int \frac{L_\lambda(\lambda)}{h\,c/\lambda}\,R_b(\lambda)\,\dd\lambda ~,
     \end{align}
 where $A(b)\geq 0$ is the \emph{extinction}, or a magnitude-units quantity expressing the amount of interstellar dust attenuation,
 and $\chi_b,\chi_{bA}$ are hypothetical photon-counting signals you would get if you could photon-count the source with and without dust attenuation.
